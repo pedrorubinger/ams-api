@@ -1,3 +1,6 @@
-const message = "hello, world!"
+import express from "express"
 
-console.log("hello, world!")
+const app = express()
+
+app.use(express.json())
+app.listen(3333, () => console.log("Server is running..."))
