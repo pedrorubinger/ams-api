@@ -5,6 +5,8 @@
   "author": "Pedro Rubinger <pedro.rubinger@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
     "dev": "nodemon --watch 'src/' --exec 'ts-node src/server.ts' -e ts",
     "husky:prepare": "husky install",
     "test": "jest --passWithNoTests",
