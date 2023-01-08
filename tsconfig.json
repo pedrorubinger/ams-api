@@ -12,6 +12,7 @@
       "@*": ["*"]
     },
     "baseUrl": "src",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "experimentalDecorators": true
   }
 }

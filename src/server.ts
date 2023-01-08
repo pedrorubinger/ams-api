@@ -1,8 +1,17 @@
 import express from "express"
+import "reflect-metadata"
 
-import { HOST, PORT } from "@config"
+import "@shared/container"
+import { router } from "@shared/infra/http/routes"
+import * as config from "@config"
+
+config.connectDatabase()
 
 const app = express()
 
 app.use(express.json())
-app.listen(PORT, () => console.log(`[ON] Server is running at ${HOST}:${PORT}`))
+app.use(router)
+
+app.listen(config.PORT, () =>
+  console.log(`[ON] Server is running at ${config.HOST}:${config.PORT}`)
+)
