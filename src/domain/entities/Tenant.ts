@@ -1,9 +1,12 @@
 import { Entity } from "@core"
+import { IEntity } from "@core/domain/Entity"
 
 interface ITenantProps {
   name: string
   responsible: string
 }
+
+type ITenant = IEntity<ITenantProps>
 
 class Tenant extends Entity<ITenantProps> {
   constructor(props: ITenantProps, id?: string) {
@@ -17,4 +20,4 @@ class Tenant extends Entity<ITenantProps> {
   }
 }
 
-export { Tenant }
+export { Tenant, ITenant }

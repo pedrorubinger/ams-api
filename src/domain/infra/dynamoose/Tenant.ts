@@ -1,4 +1,13 @@
 import * as dynamoose from "dynamoose"
+import { Item } from "dynamoose/dist/Item"
+
+class TenantItem extends Item {
+  id!: string
+  name!: string
+  responsible!: string
+  createdAt!: number
+  updatedAt!: number
+}
 
 const TenantSchema = new dynamoose.Schema(
   {
@@ -9,6 +18,6 @@ const TenantSchema = new dynamoose.Schema(
   { timestamps: true }
 )
 
-const TenantModel = dynamoose.model("Tenant", TenantSchema)
+const TenantModel = dynamoose.model<TenantItem>("Tenant", TenantSchema)
 
-export { TenantModel }
+export { TenantModel, TenantItem }

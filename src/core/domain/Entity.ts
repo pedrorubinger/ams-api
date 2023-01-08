@@ -1,6 +1,12 @@
 import crypto from "node:crypto"
 
-export abstract class Entity<T> {
+type IEntity<T> = T & {
+  id: string
+  createdAt: number
+  updatedAt: number
+}
+
+abstract class Entity<T> {
   protected readonly _id: string
   public readonly props: T
 
@@ -13,3 +19,5 @@ export abstract class Entity<T> {
     return this._id
   }
 }
+
+export { IEntity, Entity }
