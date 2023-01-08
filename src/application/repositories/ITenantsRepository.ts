@@ -1,8 +1,10 @@
-import { ICreateTenantDTO } from "@application/modules/tenant/dto/ICreateTenantDTO"
-import { ITenant } from "@domain/entities/Tenant"
+import {
+  ICreateTenantDTO,
+  ICreateTenantResponseDTO
+} from "@application/modules/tenant/dto/ICreateTenantDTO"
 
 interface ITenantsRepository {
-  create(payload: ICreateTenantDTO): Promise<ITenant>
+  create(payload: ICreateTenantDTO): Promise<ICreateTenantResponseDTO>
 }
 
 export { ITenantsRepository }

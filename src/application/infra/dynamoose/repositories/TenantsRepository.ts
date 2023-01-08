@@ -1,19 +1,24 @@
 import { ITenantsRepository } from "@application/repositories/ITenantsRepository"
-import { ICreateTenantDTO } from "@application/modules/tenant/dto/ICreateTenantDTO"
+import {
+  ICreateTenantDTO,
+  ICreateTenantResponseDTO
+} from "@application/modules/tenant/dto/ICreateTenantDTO"
 import { TenantModel } from "@domain/infra/dynamoose"
-import { ITenant } from "@domain/entities/Tenant"
+import { left, right } from "@shared/errors/Either"
+import { AppError } from "@shared/errors/AppError"
+import { ErrorCodes } from "@shared/errors/ErrorCodes"
 
 class TenantsRepository implements ITenantsRepository {
-  async create(payload: ICreateTenantDTO): Promise<ITenant> {
+  async create(payload: ICreateTenantDTO): Promise<ICreateTenantResponseDTO> {
     try {
       const tenant = await TenantModel.create(payload)
 
       await tenant.save()
 
-      return tenant
+      return right({ tenant })
     } catch (err) {
-      console.log("[ERROR] TenantsRepository > create:", err)
-      throw new Error("Something went wrong!")
+      console.log("[ERROR] TenantsRepository > create", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
     }
   }
 }

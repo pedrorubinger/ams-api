@@ -7,12 +7,15 @@ class CreateTenantController {
   async handle(request: Request, response: Response): Promise<Response> {
     const { name, responsible } = request.body
     const createTenantUseCase = container.resolve(CreateTenantUseCase)
+    const result = await createTenantUseCase.execute({ name, responsible })
 
-    const tenant = await createTenantUseCase.execute({ name, responsible })
+    if (result.isLeft()) {
+      return response
+        .status(result.value.status)
+        .json({ code: result.value.message })
+    }
 
-    return response
-      .status(201)
-      .json({ message: "The tenant has been sucessfully created!", tenant })
+    return response.status(201).json({ tenant: result.value.tenant })
   }
 }
 
