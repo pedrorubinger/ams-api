@@ -15,7 +15,12 @@ const TenantSchema = new dynamoose.Schema(
     name: { type: String, required: true },
     responsible: { type: String, required: true }
   },
-  { timestamps: true }
+  {
+    timestamps: {
+      createdAt: "createdAt",
+      updatedAt: "updatedAt"
+    }
+  }
 )
 
 const TenantModel = dynamoose.model<TenantItem>("Tenant", TenantSchema)
