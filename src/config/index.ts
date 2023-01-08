@@ -1,6 +1,6 @@
 import dotenv from "dotenv"
 
-import { startDynamoDatabase } from "@config/infra/dynamoose"
+import { startDynamoDatabase } from "@config/infra/dynamoose/Database"
 
 dotenv.config()
 
