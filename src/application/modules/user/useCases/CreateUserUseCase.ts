@@ -2,7 +2,10 @@ import { hash } from "bcrypt"
 import { inject, injectable } from "tsyringe"
 
 import { IUsersRepository } from "@application/repositories/IUsersRepository"
-import { ICreateUserDTO } from "@application/modules/user/dto/ICreateUserDTO"
+import {
+  ICreateUserDTO,
+  ICreateUserResponseDTO
+} from "@application/modules/user/dto/ICreateUserDTO"
 import { User } from "@domain/entities/User"
 
 @injectable()
@@ -18,7 +21,7 @@ class CreateUserUseCase {
     password,
     role,
     phone
-  }: ICreateUserDTO): Promise<any> {
+  }: ICreateUserDTO): Promise<ICreateUserResponseDTO> {
     /** TO DO: Find user by email before try to create a new user... */
 
     const hashedPassword = await hash(password, 8)

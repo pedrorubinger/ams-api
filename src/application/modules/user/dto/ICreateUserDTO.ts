@@ -3,6 +3,8 @@ import { AppError } from "@shared/errors/AppError"
 import { Either } from "@shared/errors/Either"
 import { IRole } from "@domain/entities/User"
 
+type ICreateUserOutput = Omit<IUser, "password">
+
 interface ICreateUserDTO {
   id?: string
   tenantId: string
@@ -13,6 +15,6 @@ interface ICreateUserDTO {
   role: IRole
 }
 
-type ICreateUserResponseDTO = Either<AppError, { user: any }>
+type ICreateUserResponseDTO = Either<AppError, { user: ICreateUserOutput }>
 
-export { ICreateUserDTO, ICreateUserResponseDTO }
+export { ICreateUserDTO, ICreateUserResponseDTO, ICreateUserOutput }

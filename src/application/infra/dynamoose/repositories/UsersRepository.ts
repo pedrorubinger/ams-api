@@ -10,6 +10,7 @@ import {
 import { IUsersRepository } from "@application/repositories/IUsersRepository"
 import {
   ICreateUserDTO,
+  ICreateUserOutput,
   ICreateUserResponseDTO
 } from "@application/modules/user/dto/ICreateUserDTO"
 import { UserModel } from "@domain/infra/dynamoose/User"
@@ -46,7 +47,7 @@ class UsersRepository implements IUsersRepository {
       }
 
       delete user.password
-      return right({ user })
+      return right({ user: user as ICreateUserOutput })
     } catch (err) {
       console.log("[ERROR] UsersRepository > create", err)
       return left(new AppError(ErrorCodes.INTERNAL))
