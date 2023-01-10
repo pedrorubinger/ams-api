@@ -7,6 +7,7 @@ dotenv.config()
 /** SERVER */
 export const PORT = process.env.PORT
 export const HOST = process.env.HOST
+export const JWT_SECRET = process.env.JWT_SECRET
 
 /** AWS */
 export const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID
