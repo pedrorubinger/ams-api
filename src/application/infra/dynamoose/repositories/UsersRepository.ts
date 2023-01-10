@@ -18,6 +18,7 @@ import { AppError } from "@shared/errors/AppError"
 import { ErrorCodes } from "@shared/errors/ErrorCodes"
 import { left, right } from "@shared/errors/Either"
 import { TransactionType } from "@config/infra/dynamoose/TransactionType"
+import { IFindUserResponseDTO } from "@application/modules/user/dto/IFindUserDTO"
 
 class UsersRepository implements IUsersRepository {
   async create(payload: ICreateUserDTO): Promise<ICreateUserResponseDTO> {
@@ -48,6 +49,25 @@ class UsersRepository implements IUsersRepository {
 
       delete user.password
       return right({ user: user as ICreateUserOutput })
+    } catch (err) {
+      console.log("[ERROR] UsersRepository > create", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
+    }
+  }
+
+  async find(id: string): Promise<IFindUserResponseDTO> {
+    try {
+      const response = await UserModel.query("id").eq(id).exec()
+
+      if (!response?.length) {
+        return left(new AppError(ErrorCodes.USER_NOT_FOUND, 404))
+      }
+
+      const user = { ...response[0], password: undefined }
+
+      delete user.password
+
+      return right({ user })
     } catch (err) {
       console.log("[ERROR] UsersRepository > create", err)
       return left(new AppError(ErrorCodes.INTERNAL))

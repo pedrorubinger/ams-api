@@ -7,14 +7,13 @@ import { CreateTenantValidator } from "@domain/infra/joi"
 class CreateTenantController {
   async handle(request: Request, response: Response): Promise<Response> {
     const { name, responsible } = request.body
-    const validation = CreateTenantValidator.validate({
-      name,
-      responsible
-    })
+    const validation = CreateTenantValidator.validate({ name, responsible })
 
     if (validation.error) {
       return response.status(400).json({ error: validation.error })
     }
+
+    /** TO DO: Validate if user who is registering the tenant is a master user. */
 
     const createTenantUseCase = container.resolve(CreateTenantUseCase)
     const result = await createTenantUseCase.execute({ name, responsible })
