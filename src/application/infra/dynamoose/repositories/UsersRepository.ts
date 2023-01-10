@@ -13,7 +13,7 @@ import {
   ICreateUserOutput,
   ICreateUserResponseDTO
 } from "@application/modules/user/dto/ICreateUserDTO"
-import { UserModel } from "@domain/infra/dynamoose/User"
+import { UserModel } from "@domain/infra/dynamoose"
 import { AppError } from "@shared/errors/AppError"
 import { ErrorCodes } from "@shared/errors/ErrorCodes"
 import { left, right } from "@shared/errors/Either"
