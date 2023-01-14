@@ -19,7 +19,11 @@ const UserSchema = new dynamoose.Schema(
   {
     id: { type: String, hashKey: true },
     tenantId: { type: String, required: true },
-    email: { type: String, required: false },
+    email: {
+      type: String,
+      required: false,
+      index: { name: "emailIndex", type: "global" }
+    },
     name: { type: String, required: false },
     password: { type: String, required: false },
     role: { type: String, required: false },

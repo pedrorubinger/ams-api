@@ -7,6 +7,9 @@ import {
   ICreateUserResponseDTO
 } from "@application/modules/user/dto/ICreateUserDTO"
 import { User } from "@domain/entities/User"
+import { ErrorCodes } from "@shared/errors/ErrorCodes"
+import { left } from "@shared/errors/Either"
+import { AppError } from "@shared/errors/AppError"
 
 @injectable()
 class CreateUserUseCase {
@@ -22,7 +25,15 @@ class CreateUserUseCase {
     role,
     phone
   }: ICreateUserDTO): Promise<ICreateUserResponseDTO> {
-    /** TO DO: Find user by email before try to create a new user... */
+    const result = await this.usersRepository.findByEmail(email)
+
+    if (result.isLeft()) {
+      return left(new AppError(result.value.message, result.value.status))
+    }
+
+    if (result?.value?.user?.email === email) {
+      return left(new AppError(ErrorCodes.EMAIL_ALREADY_REGISTERED, 400))
+    }
 
     const hashedPassword = await hash(password, 8)
     const user = User.create({

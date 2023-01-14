@@ -19,6 +19,7 @@ import { ErrorCodes } from "@shared/errors/ErrorCodes"
 import { left, right } from "@shared/errors/Either"
 import { TransactionType } from "@config/infra/dynamoose/TransactionType"
 import { IFindUserResponseDTO } from "@application/modules/user/dto/IFindUserDTO"
+import { IFindUserByEmailResponseDTO } from "@application/modules/user/dto/IFindUserByEmailDTO"
 
 class UsersRepository implements IUsersRepository {
   async create(payload: ICreateUserDTO): Promise<ICreateUserResponseDTO> {
@@ -69,7 +70,20 @@ class UsersRepository implements IUsersRepository {
 
       return right({ user })
     } catch (err) {
-      console.log("[ERROR] UsersRepository > create", err)
+      console.log("[ERROR] UsersRepository > find", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
+    }
+  }
+
+  async findByEmail(email: string): Promise<IFindUserByEmailResponseDTO> {
+    try {
+      const response = await UserModel.scan({ email: { contains: email } })
+        .all()
+        .exec()
+
+      return right({ user: response[0] })
+    } catch (err) {
+      console.log("[ERROR] UsersRepository > findByEmail", err)
       return left(new AppError(ErrorCodes.INTERNAL))
     }
   }
