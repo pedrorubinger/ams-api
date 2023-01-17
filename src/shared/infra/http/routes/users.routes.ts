@@ -2,13 +2,25 @@ import { Router } from "express"
 
 import { CreateUserController } from "@application/modules/user/controllers/CreateUserController"
 import { FindUserController } from "@application/modules/user/controllers/FindUserController"
+import { isAuthenticated } from "@shared/infra/http/middlewares/isAuthenticated"
+import { isAuthorized } from "@shared/infra/http/middlewares/isAuthorized"
 
 const usersRoutes = Router()
 
 const createUserController = new CreateUserController()
 const findUserController = new FindUserController()
 
-usersRoutes.post("/", createUserController.handle)
-usersRoutes.get("/:id", findUserController.handle)
+usersRoutes.post(
+  "/",
+  isAuthenticated,
+  isAuthorized({ roles: ["master"] }),
+  createUserController.handle
+)
+usersRoutes.get(
+  "/:id",
+  isAuthenticated,
+  isAuthorized({ roles: ["master"] }),
+  findUserController.handle
+)
 
 export { usersRoutes }
