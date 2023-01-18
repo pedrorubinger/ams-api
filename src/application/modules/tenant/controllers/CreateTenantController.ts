@@ -13,8 +13,6 @@ class CreateTenantController {
       return response.status(400).json({ error: validation.error })
     }
 
-    /** TO DO: Validate if user who is registering the tenant is a master user. */
-
     const createTenantUseCase = container.resolve(CreateTenantUseCase)
     const result = await createTenantUseCase.execute({ name, responsible })
 
