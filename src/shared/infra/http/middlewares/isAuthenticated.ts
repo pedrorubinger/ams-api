@@ -8,6 +8,7 @@ import { IRole } from "@domain/entities/User"
 interface IPayload {
   id: string
   role: IRole
+  tenantId: string
   iat: number
   exp: number
 }
@@ -27,9 +28,12 @@ const isAuthenticated = async (
   const [, token] = authHeader.split(" ")
 
   try {
-    const { id, role } = verify(token, JWT_SECRET as string) as IPayload
+    const { id, role, tenantId } = verify(
+      token,
+      JWT_SECRET as string
+    ) as IPayload
 
-    request.user = { id, role }
+    request.user = { id, role, tenantId }
 
     next()
   } catch (err) {
