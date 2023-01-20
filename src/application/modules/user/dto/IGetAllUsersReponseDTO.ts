@@ -4,9 +4,14 @@ import { AppError } from "@shared/errors/AppError"
 import { Either } from "@shared/errors/Either"
 import { UserItem } from "@domain/infra/dynamoose/User"
 
+interface IGetAllUsersParamsDTO {
+  /** @default 5 */
+  size?: number
+}
+
 type IGetAllUsersResponseDTO = Either<
   AppError,
-  { users: ScanResponse<UserItem> }
+  { users: ScanResponse<UserItem>; lastKey?: string }
 >
 
-export { IGetAllUsersResponseDTO }
+export { IGetAllUsersResponseDTO, IGetAllUsersParamsDTO }

@@ -14,7 +14,7 @@ class GetAllUsersController {
         .json({ code: result.value.message })
     }
 
-    return response.status(201).json({ users: result.value.users })
+    return response.status(201).json(result.value)
   }
 }
 

@@ -20,7 +20,10 @@ import { left, right } from "@shared/errors/Either"
 import { TransactionType } from "@config/infra/dynamoose/TransactionType"
 import { IFindUserResponseDTO } from "@application/modules/user/dto/IFindUserDTO"
 import { IFindUserByEmailResponseDTO } from "@application/modules/user/dto/IFindUserByEmailDTO"
-import { IGetAllUsersResponseDTO } from "@application/modules/user/dto/IGetAllUsersReponseDTO"
+import {
+  IGetAllUsersParamsDTO,
+  IGetAllUsersResponseDTO
+} from "@application/modules/user/dto/IGetAllUsersReponseDTO"
 
 class UsersRepository implements IUsersRepository {
   async create(payload: ICreateUserDTO): Promise<ICreateUserResponseDTO> {
@@ -89,7 +92,9 @@ class UsersRepository implements IUsersRepository {
     }
   }
 
-  async getAll(): Promise<IGetAllUsersResponseDTO> {
+  async getAll(
+    params?: IGetAllUsersParamsDTO
+  ): Promise<IGetAllUsersResponseDTO> {
     try {
       const users = await UserModel.scan({ email: { exists: true } })
         .attributes([
@@ -102,9 +107,10 @@ class UsersRepository implements IUsersRepository {
           "createdAt",
           "updatedAt"
         ])
+        .limit(params?.size ?? 5)
         .exec()
 
-      return right({ users })
+      return right({ users, lastKey: users?.lastKey?.id as string | undefined })
     } catch (err) {
       console.log("[ERROR] UsersRepository > getAll", err)
       return left(new AppError(ErrorCodes.INTERNAL))
