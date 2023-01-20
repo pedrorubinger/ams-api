@@ -14,7 +14,7 @@ class GetAllTenantsController {
         .json({ code: result.value.message })
     }
 
-    return response.status(201).json({ tenants: result.value.tenants })
+    return response.status(201).json(result.value)
   }
 }
 

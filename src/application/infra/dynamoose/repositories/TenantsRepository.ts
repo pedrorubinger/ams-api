@@ -4,7 +4,10 @@ import {
   ICreateTenantDTO,
   ICreateTenantResponseDTO
 } from "@application/modules/tenant/dto/ICreateTenantDTO"
-import { IGetAllTenantsResponseDTO } from "@application/modules/tenant/dto/IGetAllTenantsResponseDTO"
+import {
+  IGetAllTenantsParamsDTO,
+  IGetAllTenantsResponseDTO
+} from "@application/modules/tenant/dto/IGetAllTenantsResponseDTO"
 import { left, right } from "@shared/errors/Either"
 import { AppError } from "@shared/errors/AppError"
 import { ErrorCodes } from "@shared/errors/ErrorCodes"
@@ -23,11 +26,18 @@ class TenantsRepository implements ITenantsRepository {
     }
   }
 
-  async getAll(): Promise<IGetAllTenantsResponseDTO> {
+  async getAll(
+    params?: IGetAllTenantsParamsDTO
+  ): Promise<IGetAllTenantsResponseDTO> {
     try {
-      const tenants = await TenantModel.scan().exec()
+      const tenants = await TenantModel.scan()
+        .limit(params?.size ?? 5)
+        .exec()
 
-      return right({ tenants })
+      return right({
+        tenants,
+        lastKey: (tenants?.lastKey?.id ?? null) as string | null
+      })
     } catch (err) {
       console.log("[ERROR] TenantsRepository > getAll", err)
       return left(new AppError(ErrorCodes.INTERNAL))
