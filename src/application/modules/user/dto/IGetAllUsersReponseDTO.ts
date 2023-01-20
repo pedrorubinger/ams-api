@@ -11,7 +11,7 @@ interface IGetAllUsersParamsDTO {
 
 type IGetAllUsersResponseDTO = Either<
   AppError,
-  { users: ScanResponse<UserItem>; lastKey?: string }
+  { users: ScanResponse<UserItem>; lastKey: string | null }
 >
 
 export { IGetAllUsersResponseDTO, IGetAllUsersParamsDTO }

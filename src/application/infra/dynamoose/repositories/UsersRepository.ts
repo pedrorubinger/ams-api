@@ -110,7 +110,10 @@ class UsersRepository implements IUsersRepository {
         .limit(params?.size ?? 5)
         .exec()
 
-      return right({ users, lastKey: users?.lastKey?.id as string | undefined })
+      return right({
+        users,
+        lastKey: (users?.lastKey?.id ?? null) as string | null
+      })
     } catch (err) {
       console.log("[ERROR] UsersRepository > getAll", err)
       return left(new AppError(ErrorCodes.INTERNAL))
