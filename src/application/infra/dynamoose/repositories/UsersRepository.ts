@@ -96,7 +96,9 @@ class UsersRepository implements IUsersRepository {
     params?: IGetAllUsersParamsDTO
   ): Promise<IGetAllUsersResponseDTO> {
     try {
-      const users = await UserModel.scan({ email: { exists: true } })
+      const scan = UserModel.scan({
+        email: { beginsWith: params?.email ?? "", and: { exists: true } }
+      })
         .attributes([
           "id",
           "tenantId",
@@ -108,11 +110,18 @@ class UsersRepository implements IUsersRepository {
           "updatedAt"
         ])
         .limit(params?.size ?? 5)
-        .exec()
+
+      if (params?.startAt) {
+        scan.startAt({ id: params.startAt })
+      }
+
+      const users = await scan.exec()
 
       return right({
         users,
-        lastKey: (users?.lastKey?.id ?? null) as string | null
+        lastKey: !users?.count
+          ? null
+          : ((users?.lastKey?.id ?? null) as string | null)
       })
     } catch (err) {
       console.log("[ERROR] UsersRepository > getAll", err)

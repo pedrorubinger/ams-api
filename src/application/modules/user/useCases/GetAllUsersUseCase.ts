@@ -1,7 +1,10 @@
 import { inject, injectable } from "tsyringe"
 
 import { IUsersRepository } from "@application/repositories//IUsersRepository"
-import { IGetAllUsersResponseDTO } from "@application/modules/user/dto/IGetAllUsersReponseDTO"
+import {
+  IGetAllUsersParamsDTO,
+  IGetAllUsersResponseDTO
+} from "@application/modules/user/dto/IGetAllUsersReponseDTO"
 
 @injectable()
 class GetAllUsersUseCase {
@@ -9,8 +12,14 @@ class GetAllUsersUseCase {
     @inject("UsersRepository") private usersRepository: IUsersRepository
   ) {}
 
-  async execute(): Promise<IGetAllUsersResponseDTO> {
-    return await this.usersRepository.getAll()
+  async execute(
+    params?: IGetAllUsersParamsDTO
+  ): Promise<IGetAllUsersResponseDTO> {
+    return await this.usersRepository.getAll({
+      email: params?.email,
+      size: params?.size,
+      startAt: params?.startAt
+    })
   }
 }
 

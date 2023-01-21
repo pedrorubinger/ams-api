@@ -7,6 +7,8 @@ import { UserItem } from "@domain/infra/dynamoose/User"
 interface IGetAllUsersParamsDTO {
   /** @default 5 */
   size?: number
+  email?: string
+  startAt?: string
 }
 
 type IGetAllUsersResponseDTO = Either<
