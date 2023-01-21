@@ -7,6 +7,7 @@ import { TenantItem } from "@domain/infra/dynamoose/Tenant"
 interface IGetAllTenantsParamsDTO {
   /** @default 5 */
   size?: number
+  startAt?: string
 }
 
 type IGetAllTenantsResponseDTO = Either<

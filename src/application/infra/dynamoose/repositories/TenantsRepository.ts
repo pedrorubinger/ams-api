@@ -30,13 +30,19 @@ class TenantsRepository implements ITenantsRepository {
     params?: IGetAllTenantsParamsDTO
   ): Promise<IGetAllTenantsResponseDTO> {
     try {
-      const tenants = await TenantModel.scan()
-        .limit(params?.size ?? 5)
-        .exec()
+      const scan = TenantModel.scan().limit(params?.size ?? 5)
+
+      if (params?.startAt) {
+        scan.startAt({ id: params.startAt })
+      }
+
+      const tenants = await scan.exec()
 
       return right({
         tenants,
-        lastKey: (tenants?.lastKey?.id ?? null) as string | null
+        lastKey: !tenants?.count
+          ? null
+          : ((tenants?.lastKey?.id ?? null) as string | null)
       })
     } catch (err) {
       console.log("[ERROR] TenantsRepository > getAll", err)
