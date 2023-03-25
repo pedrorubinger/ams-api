@@ -39,22 +39,19 @@ class AuthenticateUserUseCase {
       return left(new AppError(ErrorCodes.INVALID_CREDENTIALS, 400))
     }
 
-    const token = sign(
-      { id: user.id, role: user.role, tenantId: user.tenantId },
-      JWT_SECRET as string,
-      {
-        expiresIn: "1d",
-      }
-    )
+    const userData = {
+      id: user.id,
+      role: user.role,
+      tenantId: user.tenantId,
+      name: user.name,
+    }
+    const token = sign(userData, JWT_SECRET as string, {
+      expiresIn: "1d",
+    })
 
     return right({
       token,
-      user: {
-        email: user.email,
-        id: user.id,
-        role: user.role,
-        name: user.name,
-      },
+      user: { ...userData, email: user.email },
     })
   }
 }

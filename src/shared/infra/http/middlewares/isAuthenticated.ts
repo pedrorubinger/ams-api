@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express"
-import { verify } from "jsonwebtoken"
+import JWT, { verify } from "jsonwebtoken"
 
 import { ErrorCodes } from "@shared/errors/ErrorCodes"
 import { JWT_SECRET } from "@config"
@@ -7,6 +7,7 @@ import { IRole } from "@domain/entities/User"
 
 interface IPayload {
   id: string
+  name: string
   role: IRole
   tenantId: string
   iat: number
@@ -28,16 +29,21 @@ const isAuthenticated = async (
   const [, token] = authHeader.split(" ")
 
   try {
-    const { id, role, tenantId } = verify(
+    const { id, role, tenantId, name } = verify(
       token,
       JWT_SECRET as string
     ) as IPayload
 
-    request.user = { id, role, tenantId }
+    request.user = { id, role, tenantId, name }
 
     next()
   } catch (err) {
-    return response.status(401).json({ code: ErrorCodes.INVALID_TOKEN })
+    const code =
+      err instanceof JWT.TokenExpiredError
+        ? ErrorCodes.TOKEN_HAS_EXPIRED
+        : ErrorCodes.INVALID_TOKEN
+
+    return response.status(401).json({ code })
   }
 }
 
