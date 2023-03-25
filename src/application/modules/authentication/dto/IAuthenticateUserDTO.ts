@@ -11,6 +11,7 @@ type IAuthenticateUserOutput = {
   user: {
     id: string
     email: string
+    name: string
     role: IRole
   }
   token: string

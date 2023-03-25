@@ -6,7 +6,7 @@ import { JWT_SECRET } from "@config"
 import { IUsersRepository } from "@application/repositories/IUsersRepository"
 import {
   IAuthenticateUserDTO,
-  IAuthenticateUserResponseDTO
+  IAuthenticateUserResponseDTO,
 } from "@application/modules/authentication/dto/IAuthenticateUserDTO"
 import { left, right } from "@shared/errors/Either"
 import { AppError } from "@shared/errors/AppError"
@@ -20,7 +20,7 @@ class AuthenticateUserUseCase {
 
   async execute({
     email,
-    password
+    password,
   }: IAuthenticateUserDTO): Promise<IAuthenticateUserResponseDTO> {
     const result = await this.usersRepository.findByEmail(email)
 
@@ -43,13 +43,18 @@ class AuthenticateUserUseCase {
       { id: user.id, role: user.role, tenantId: user.tenantId },
       JWT_SECRET as string,
       {
-        expiresIn: "1d"
+        expiresIn: "1d",
       }
     )
 
     return right({
       token,
-      user: { email: user.email, id: user.id, role: user.role }
+      user: {
+        email: user.email,
+        id: user.id,
+        role: user.role,
+        name: user.name,
+      },
     })
   }
 }
