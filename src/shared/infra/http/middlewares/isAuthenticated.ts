@@ -9,6 +9,7 @@ interface IPayload {
   id: string
   name: string
   role: IRole
+  email: string
   tenantId: string
   iat: number
   exp: number
@@ -29,12 +30,12 @@ const isAuthenticated = async (
   const [, token] = authHeader.split(" ")
 
   try {
-    const { id, role, tenantId, name } = verify(
+    const { id, role, tenantId, name, email } = verify(
       token,
       JWT_SECRET as string
     ) as IPayload
 
-    request.user = { id, role, tenantId, name }
+    request.user = { id, role, tenantId, name, email }
 
     next()
   } catch (err) {

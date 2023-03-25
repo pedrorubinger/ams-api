@@ -44,6 +44,7 @@ class AuthenticateUserUseCase {
       role: user.role,
       tenantId: user.tenantId,
       name: user.name,
+      email: user.email,
     }
     const token = sign(userData, JWT_SECRET as string, {
       expiresIn: "1d",
