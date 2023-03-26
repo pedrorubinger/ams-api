@@ -2,14 +2,14 @@ import { Request, Response } from "express"
 import { container } from "tsyringe"
 
 import { UpdateUserValidator } from "@domain/infra/joi"
+import { AuthenticateUserUseCase } from "@application/modules/authentication/useCases/AuthenticateUserUseCase"
 import { UpdateUserUseCase } from "@application/modules/user/useCases/UpdateUserUseCase"
 import { ValidateUserPasswordUseCase } from "@application/modules/user/useCases/ValidateUserPasswordUseCase"
 
 class UpdateUserController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { tenantId, id: tokenUserId, role } = request.user
-    const { id, name, password, newPassword, phone } = request.body
-    const userId = role === "master" && id ? id : tokenUserId
+    const { id, email, tenantId, role } = request.user
+    const { name, password, newPassword, phone } = request.body
 
     const validation = UpdateUserValidator.validate({
       name,
@@ -27,7 +27,7 @@ class UpdateUserController {
       ValidateUserPasswordUseCase
     )
     const validationResult = await validateUserPasswordUseCase.execute({
-      id: userId,
+      id,
       password,
     })
 
@@ -39,7 +39,7 @@ class UpdateUserController {
 
     const updateUserUseCase = container.resolve(UpdateUserUseCase)
     const result = await updateUserUseCase.execute({
-      id: userId,
+      id,
       newPassword,
       name,
       phone,
@@ -52,7 +52,22 @@ class UpdateUserController {
         .json({ code: result.value.message })
     }
 
-    return response.status(200).json({ user: result.value.user })
+    const authenticateUserUseCase = container.resolve(AuthenticateUserUseCase)
+    const authenticationResult = await authenticateUserUseCase.execute({
+      email,
+      password: newPassword || password,
+    })
+
+    if (authenticationResult.isLeft()) {
+      return response
+        .status(authenticationResult.value.status)
+        .json({ code: authenticationResult.value.message })
+    }
+
+    return response.status(200).json({
+      user: result.value.user,
+      token: authenticationResult.value.token,
+    })
   }
 }
 
