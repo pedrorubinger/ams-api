@@ -15,9 +15,15 @@ const UpdateUserValidator = Joi.object({
     }),
   newPassword: Joi.string()
     .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+    .when(Joi.ref("password"), {
+      is: Joi.exist(),
+      then: Joi.not(Joi.ref("password")).required(),
+      otherwise: Joi.optional(),
+    })
     .messages({
       "string.base": "NEW_PASSWORD_MUST_BE_TEXT",
       "string.pattern": "NEW_PASSWORD_IS_INVALID",
+      "any.invalid": "NEW_PASSWORD_MUST_BE_DIFFERENT_FROM_PASSWORD",
     }),
   phone: Joi.string().optional().max(40).messages({
     "string.base": "PHONE_MUST_BE_TEXT",

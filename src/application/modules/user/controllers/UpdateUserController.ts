@@ -8,12 +8,13 @@ import { ValidateUserPasswordUseCase } from "@application/modules/user/useCases/
 class UpdateUserController {
   async handle(request: Request, response: Response): Promise<Response> {
     const { tenantId, id: tokenUserId, role } = request.user
-    const { id, name, password, phone } = request.body
+    const { id, name, password, newPassword, phone } = request.body
     const userId = role === "master" && id ? id : tokenUserId
 
     const validation = UpdateUserValidator.validate({
       name,
       password,
+      newPassword,
       phone,
       role,
     })
@@ -39,6 +40,7 @@ class UpdateUserController {
     const updateUserUseCase = container.resolve(UpdateUserUseCase)
     const result = await updateUserUseCase.execute({
       id: userId,
+      newPassword,
       name,
       phone,
       tenantId,
