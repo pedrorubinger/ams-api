@@ -3,11 +3,13 @@ import { compare } from "bcrypt"
 import { sign } from "jsonwebtoken"
 
 import { JWT_SECRET } from "@config"
+import { JWT_DURATION } from "@config/infra/jwt"
 import { IUsersRepository } from "@application/repositories/IUsersRepository"
 import {
   IAuthenticateUserDTO,
   IAuthenticateUserResponseDTO,
 } from "@application/modules/authentication/dto/IAuthenticateUserDTO"
+
 import { left, right } from "@shared/errors/Either"
 import { AppError } from "@shared/errors/AppError"
 import { ErrorCodes } from "@shared/errors/ErrorCodes"
@@ -47,7 +49,7 @@ class AuthenticateUserUseCase {
       email: user.email,
     }
     const token = sign(userData, JWT_SECRET as string, {
-      expiresIn: "1d",
+      expiresIn: JWT_DURATION,
     })
 
     return right({
