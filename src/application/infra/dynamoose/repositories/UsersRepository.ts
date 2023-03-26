@@ -4,14 +4,15 @@ import { AttributeValue } from "@aws-sdk/client-dynamodb"
 import {
   TransactionReturnOptions,
   TransactionSettings,
-  CreateTransactionInput
+  CreateTransactionInput,
 } from "dynamoose/dist/Transaction"
+import { hash } from "bcrypt"
 
 import { IUsersRepository } from "@application/repositories/IUsersRepository"
 import {
   ICreateUserDTO,
   ICreateUserOutput,
-  ICreateUserResponseDTO
+  ICreateUserResponseDTO,
 } from "@application/modules/user/dto/ICreateUserDTO"
 import { UserModel } from "@domain/infra/dynamoose"
 import { AppError } from "@shared/errors/AppError"
@@ -22,15 +23,20 @@ import { IFindUserResponseDTO } from "@application/modules/user/dto/IFindUserDTO
 import { IFindUserByEmailResponseDTO } from "@application/modules/user/dto/IFindUserByEmailDTO"
 import {
   IGetAllUsersParamsDTO,
-  IGetAllUsersResponseDTO
+  IGetAllUsersResponseDTO,
 } from "@application/modules/user/dto/IGetAllUsersReponseDTO"
+import {
+  IUpdateUserDTO,
+  IUpdateUserResponseDTO,
+} from "@application/modules/user/dto/IUpdateUserDTO"
+import { UserItem } from "@domain/infra/dynamoose/User"
 
 class UsersRepository implements IUsersRepository {
   async create(payload: ICreateUserDTO): Promise<ICreateUserResponseDTO> {
     try {
       const settings: TransactionSettings = {
         return: TransactionReturnOptions.items,
-        type: "write" as unknown as TransactionType
+        type: "write" as unknown as TransactionType,
       }
 
       let result: CreateTransactionInput
@@ -40,8 +46,8 @@ class UsersRepository implements IUsersRepository {
           (result = await UserModel.transaction.create(payload)),
           await UserModel.transaction.create({
             id: `email#${payload.email}`,
-            tenantId: payload.tenantId
-          })
+            tenantId: payload.tenantId,
+          }),
         ],
         settings
       )
@@ -49,13 +55,37 @@ class UsersRepository implements IUsersRepository {
       const user = {
         ...dynamoUtils.unmarshall(
           result.Put.Item as Record<string, AttributeValue>
-        )
+        ),
       }
 
       delete user.password
       return right({ user: user as ICreateUserOutput })
     } catch (err) {
       console.log("[ERROR] UsersRepository > create", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
+    }
+  }
+
+  async update(
+    payload: Omit<IUpdateUserDTO, "role" | "password">
+  ): Promise<IUpdateUserResponseDTO> {
+    try {
+      const { id, newPassword, phone, name } = payload
+      const updatedData: Partial<UserItem> = {}
+
+      if (newPassword !== undefined) {
+        const hashedPassword = await hash(newPassword, 8)
+
+        updatedData.password = hashedPassword
+      }
+      if (phone !== undefined) updatedData.phone = phone
+      if (name !== undefined) updatedData.name = name
+
+      const user = await UserModel.update({ id }, updatedData)
+
+      return right({ user })
+    } catch (err) {
+      console.log("[ERROR] UsersRepository > update", err)
       return left(new AppError(ErrorCodes.INTERNAL))
     }
   }
@@ -68,9 +98,7 @@ class UsersRepository implements IUsersRepository {
         return left(new AppError(ErrorCodes.USER_NOT_FOUND, 404))
       }
 
-      const user = { ...response[0], password: undefined }
-
-      delete user.password
+      const user = { ...response[0] }
 
       return right({ user })
     } catch (err) {
@@ -97,7 +125,7 @@ class UsersRepository implements IUsersRepository {
   ): Promise<IGetAllUsersResponseDTO> {
     try {
       const scan = UserModel.scan({
-        email: { beginsWith: params?.email ?? "", and: { exists: true } }
+        email: { beginsWith: params?.email ?? "", and: { exists: true } },
       })
         .attributes([
           "id",
@@ -107,7 +135,7 @@ class UsersRepository implements IUsersRepository {
           "role",
           "phone",
           "createdAt",
-          "updatedAt"
+          "updatedAt",
         ])
         .limit(params?.size ?? 5)
 
@@ -121,7 +149,7 @@ class UsersRepository implements IUsersRepository {
         users,
         lastKey: !users?.count
           ? null
-          : ((users?.lastKey?.id ?? null) as string | null)
+          : ((users?.lastKey?.id ?? null) as string | null),
       })
     } catch (err) {
       console.log("[ERROR] UsersRepository > getAll", err)
