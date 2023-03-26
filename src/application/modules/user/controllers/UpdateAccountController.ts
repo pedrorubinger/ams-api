@@ -1,17 +1,17 @@
 import { Request, Response } from "express"
 import { container } from "tsyringe"
 
-import { UpdateUserValidator } from "@domain/infra/joi"
+import { UpdateAccountValidator } from "@domain/infra/joi"
 import { AuthenticateUserUseCase } from "@application/modules/authentication/useCases/AuthenticateUserUseCase"
-import { UpdateUserUseCase } from "@application/modules/user/useCases/UpdateUserUseCase"
+import { UpdateAccountUseCase } from "@application/modules/user/useCases/UpdateAccountUseCase"
 import { ValidateUserPasswordUseCase } from "@application/modules/user/useCases/ValidateUserPasswordUseCase"
 
-class UpdateUserController {
+class UpdateAccountController {
   async handle(request: Request, response: Response): Promise<Response> {
     const { id, email, tenantId, role } = request.user
     const { name, password, newPassword, phone } = request.body
 
-    const validation = UpdateUserValidator.validate({
+    const validation = UpdateAccountValidator.validate({
       name,
       password,
       newPassword,
@@ -37,8 +37,8 @@ class UpdateUserController {
         .json({ code: validationResult.value.message })
     }
 
-    const updateUserUseCase = container.resolve(UpdateUserUseCase)
-    const result = await updateUserUseCase.execute({
+    const updateAccountUseCase = container.resolve(UpdateAccountUseCase)
+    const result = await updateAccountUseCase.execute({
       id,
       newPassword,
       name,
@@ -71,4 +71,4 @@ class UpdateUserController {
   }
 }
 
-export { UpdateUserController }
+export { UpdateAccountController }

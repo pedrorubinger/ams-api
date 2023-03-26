@@ -2,14 +2,14 @@ import { inject, injectable } from "tsyringe"
 
 import { IUsersRepository } from "@application/repositories/IUsersRepository"
 import {
-  IUpdateUserDTO,
-  IUpdateUserResponseDTO,
-} from "@application/modules/user/dto/IUpdateUserDTO"
+  IUpdateAccountDTO,
+  IUpdateAccountResponseDTO,
+} from "@application/modules/user/dto/IUpdateAccountDTO"
 import { left, right } from "@shared/errors/Either"
 import { AppError } from "@shared/errors/AppError"
 
 @injectable()
-class UpdateUserUseCase {
+class UpdateAccountUseCase {
   constructor(
     @inject("UsersRepository") private usersRepository: IUsersRepository
   ) {}
@@ -20,7 +20,7 @@ class UpdateUserUseCase {
     tenantId,
     newPassword,
     phone,
-  }: IUpdateUserDTO): Promise<IUpdateUserResponseDTO> {
+  }: IUpdateAccountDTO): Promise<IUpdateAccountResponseDTO> {
     const result = await this.usersRepository.update({
       id,
       newPassword,
@@ -41,4 +41,4 @@ class UpdateUserUseCase {
   }
 }
 
-export { UpdateUserUseCase }
+export { UpdateAccountUseCase }

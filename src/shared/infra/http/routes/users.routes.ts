@@ -5,14 +5,14 @@ import { isAuthorized } from "@shared/infra/http/middlewares/isAuthorized"
 import { CreateUserController } from "@application/modules/user/controllers/CreateUserController"
 import { FindUserController } from "@application/modules/user/controllers/FindUserController"
 import { GetAllUsersController } from "@application/modules/user/controllers/GetAllUsersController"
-import { UpdateUserController } from "@application/modules/user/controllers/UpdateUserController"
+import { UpdateAccountController } from "@application/modules/user/controllers/UpdateAccountController"
 
 const usersRoutes = Router()
 
 const createUserController = new CreateUserController()
 const findUserController = new FindUserController()
 const getAllUsersController = new GetAllUsersController()
-const updateUserController = new UpdateUserController()
+const updateAccountController = new UpdateAccountController()
 
 usersRoutes.post(
   "/",
@@ -32,6 +32,6 @@ usersRoutes.get(
   isAuthorized({ roles: ["master"] }),
   getAllUsersController.handle
 )
-usersRoutes.put("/", isAuthenticated, updateUserController.handle)
+usersRoutes.put("/", isAuthenticated, updateAccountController.handle)
 
 export { usersRoutes }

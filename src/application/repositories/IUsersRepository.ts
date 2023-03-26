@@ -9,15 +9,15 @@ import {
   IGetAllUsersResponseDTO,
 } from "@application/modules/user/dto/IGetAllUsersReponseDTO"
 import {
-  IUpdateUserDTO,
-  IUpdateUserResponseDTO,
-} from "@application/modules/user/dto/IUpdateUserDTO"
+  IUpdateAccountDTO,
+  IUpdateAccountResponseDTO,
+} from "@application/modules/user/dto/IUpdateAccountDTO"
 
 interface IUsersRepository {
   create(payload: ICreateUserDTO): Promise<ICreateUserResponseDTO>
   update(
-    payload: Omit<IUpdateUserDTO, "role" | "password">
-  ): Promise<IUpdateUserResponseDTO>
+    payload: Omit<IUpdateAccountDTO, "role" | "password">
+  ): Promise<IUpdateAccountResponseDTO>
   find(id: string): Promise<IFindUserResponseDTO>
   findByEmail(email: string): Promise<IFindUserByEmailResponseDTO>
   getAll(params?: IGetAllUsersParamsDTO): Promise<IGetAllUsersResponseDTO>

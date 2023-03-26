@@ -1,6 +1,6 @@
 import Joi from "joi"
 
-const UpdateUserValidator = Joi.object({
+const UpdateAccountValidator = Joi.object({
   name: Joi.string().max(100).messages({
     "string.base": "NAME_MUST_BE_TEXT",
     "string.max": "NAME_EXCEEDS_LENGTH_100",
@@ -29,10 +29,6 @@ const UpdateUserValidator = Joi.object({
     "string.base": "PHONE_MUST_BE_TEXT",
     "string.max": "PHONE_EXCEEDS_LENGTH_40",
   }),
-  role: Joi.string().valid("master", "admin").messages({
-    "string.base": "ROLE_MUST_BE_TEXT",
-    "string.valid": "ROLE_IS_INVALID",
-  }),
 })
 
-export { UpdateUserValidator }
+export { UpdateAccountValidator }

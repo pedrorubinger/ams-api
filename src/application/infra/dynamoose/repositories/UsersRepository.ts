@@ -26,9 +26,9 @@ import {
   IGetAllUsersResponseDTO,
 } from "@application/modules/user/dto/IGetAllUsersReponseDTO"
 import {
-  IUpdateUserDTO,
-  IUpdateUserResponseDTO,
-} from "@application/modules/user/dto/IUpdateUserDTO"
+  IUpdateAccountDTO,
+  IUpdateAccountResponseDTO,
+} from "@application/modules/user/dto/IUpdateAccountDTO"
 import { UserItem } from "@domain/infra/dynamoose/User"
 
 class UsersRepository implements IUsersRepository {
@@ -67,8 +67,8 @@ class UsersRepository implements IUsersRepository {
   }
 
   async update(
-    payload: Omit<IUpdateUserDTO, "role" | "password">
-  ): Promise<IUpdateUserResponseDTO> {
+    payload: Omit<IUpdateAccountDTO, "role" | "password">
+  ): Promise<IUpdateAccountResponseDTO> {
     try {
       const { id, newPassword, phone, name } = payload
       const updatedData: Partial<UserItem> = {}
