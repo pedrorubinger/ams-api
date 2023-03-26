@@ -8,7 +8,7 @@ import { ValidateUserPasswordUseCase } from "@application/modules/user/useCases/
 
 class UpdateAccountController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { id, email, tenantId, role } = request.user
+    const { id, email, tenantId } = request.user
     const { name, password, newPassword, phone } = request.body
 
     const validation = UpdateAccountValidator.validate({
@@ -16,7 +16,6 @@ class UpdateAccountController {
       password,
       newPassword,
       phone,
-      role,
     })
 
     if (validation.error) {
