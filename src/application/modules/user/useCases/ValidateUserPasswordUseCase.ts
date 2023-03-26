@@ -27,14 +27,14 @@ class ValidateUserPasswordUseCase {
     }
 
     if (!result.value.user?.password) {
-      return left(new AppError(ErrorCodes.INVALID_CREDENTIALS))
+      return left(new AppError(ErrorCodes.PASSWORD_IS_INVALID))
     }
 
     const { user } = result.value
     const passwordsMatch = await compare(password, user.password)
 
     if (!passwordsMatch) {
-      return left(new AppError(ErrorCodes.INVALID_CREDENTIALS, 400))
+      return left(new AppError(ErrorCodes.PASSWORD_IS_INVALID, 400))
     }
 
     if (result.isLeft()) {
