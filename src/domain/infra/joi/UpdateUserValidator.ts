@@ -17,7 +17,7 @@ const UpdateUserValidator = Joi.object({
     .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
     .when(Joi.ref("password"), {
       is: Joi.exist(),
-      then: Joi.not(Joi.ref("password")).required(),
+      then: Joi.not(Joi.ref("password")),
       otherwise: Joi.optional(),
     })
     .messages({
