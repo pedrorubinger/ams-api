@@ -12,7 +12,7 @@ interface IGetAllTenantsParamsDTO {
 
 type IGetAllTenantsResponseDTO = Either<
   AppError,
-  { tenants: ScanResponse<TenantItem>; lastKey: string | null }
+  { tenants: ScanResponse<TenantItem>; lastKey: string | null; total: number }
 >
 
 export { IGetAllTenantsResponseDTO, IGetAllTenantsParamsDTO }

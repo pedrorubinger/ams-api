@@ -5,11 +5,13 @@ import { GetAllTenantsUseCase } from "@application/modules/tenant/useCases/GetAl
 
 class GetAllTenantsController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { size, startAt } = request.params
+    const { size, startAt } = request.query
+
     const getAllTenantsUseCase = container.resolve(GetAllTenantsUseCase)
+
     const result = await getAllTenantsUseCase.execute({
       startAt: startAt as string | undefined,
-      size: (size as string | undefined) ? Number(size) : undefined
+      size: (size as string | undefined) ? Number(size) : undefined,
     })
 
     if (result.isLeft()) {
@@ -18,7 +20,7 @@ class GetAllTenantsController {
         .json({ code: result.value.message })
     }
 
-    return response.status(201).json(result.value)
+    return response.status(200).json(result.value)
   }
 }
 

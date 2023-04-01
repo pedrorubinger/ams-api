@@ -2,11 +2,11 @@ import { TenantModel } from "@domain/infra/dynamoose"
 import { ITenantsRepository } from "@application/repositories/ITenantsRepository"
 import {
   ICreateTenantDTO,
-  ICreateTenantResponseDTO
+  ICreateTenantResponseDTO,
 } from "@application/modules/tenant/dto/ICreateTenantDTO"
 import {
   IGetAllTenantsParamsDTO,
-  IGetAllTenantsResponseDTO
+  IGetAllTenantsResponseDTO,
 } from "@application/modules/tenant/dto/IGetAllTenantsResponseDTO"
 import { left, right } from "@shared/errors/Either"
 import { AppError } from "@shared/errors/AppError"
@@ -30,19 +30,21 @@ class TenantsRepository implements ITenantsRepository {
     params?: IGetAllTenantsParamsDTO
   ): Promise<IGetAllTenantsResponseDTO> {
     try {
-      const scan = TenantModel.scan().limit(params?.size ?? 5)
+      const scan = TenantModel.scan()
 
       if (params?.startAt) {
         scan.startAt({ id: params.startAt })
       }
 
-      const tenants = await scan.exec()
+      const total = await TenantModel.scan().count().exec()
+      const tenants = await scan.limit(params?.size ?? 5).exec()
 
       return right({
         tenants,
+        total: total.count,
         lastKey: !tenants?.count
           ? null
-          : ((tenants?.lastKey?.id ?? null) as string | null)
+          : ((tenants?.lastKey?.id ?? null) as string | null),
       })
     } catch (err) {
       console.log("[ERROR] TenantsRepository > getAll", err)
