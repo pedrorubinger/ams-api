@@ -3,7 +3,7 @@ import { inject, injectable } from "tsyringe"
 import { ITenantsRepository } from "@application/repositories/ITenantsRepository"
 import {
   ICreateTenantDTO,
-  ICreateTenantResponseDTO
+  ICreateTenantResponseDTO,
 } from "@application/modules/tenant/dto/ICreateTenantDTO"
 import { Tenant } from "@domain/entities/Tenant"
 
@@ -15,7 +15,7 @@ class CreateTenantUseCase {
 
   async execute({
     name,
-    responsible
+    responsible,
   }: ICreateTenantDTO): Promise<ICreateTenantResponseDTO> {
     const tenant = Tenant.create({ name, responsible })
     const payload = { ...tenant.props, id: tenant.id }
