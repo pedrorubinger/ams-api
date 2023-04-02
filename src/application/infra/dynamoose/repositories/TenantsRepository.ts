@@ -13,10 +13,10 @@ import {
   IUpdateTenantDTO,
   IUpdateTenantResponseDTO,
 } from "@application/modules/tenant/dto/IUpdateTenantDTO"
+import { IDeleteTenantResponseDTO } from "@application/modules/tenant/dto/IDeleteTenantDTO"
 import { left, right } from "@shared/errors/Either"
 import { AppError } from "@shared/errors/AppError"
 import { ErrorCodes } from "@shared/errors/ErrorCodes"
-import { IDeleteTenantResponseDTO } from "../../../modules/tenant/dto/IDeleteTenantDTO"
 
 class TenantsRepository implements ITenantsRepository {
   async create(payload: ICreateTenantDTO): Promise<ICreateTenantResponseDTO> {
