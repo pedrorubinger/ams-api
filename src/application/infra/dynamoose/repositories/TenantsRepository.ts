@@ -16,6 +16,7 @@ import {
 import { left, right } from "@shared/errors/Either"
 import { AppError } from "@shared/errors/AppError"
 import { ErrorCodes } from "@shared/errors/ErrorCodes"
+import { IDeleteTenantResponseDTO } from "../../../modules/tenant/dto/IDeleteTenantDTO"
 
 class TenantsRepository implements ITenantsRepository {
   async create(payload: ICreateTenantDTO): Promise<ICreateTenantResponseDTO> {
@@ -71,6 +72,22 @@ class TenantsRepository implements ITenantsRepository {
       })
     } catch (err) {
       console.log("[ERROR] TenantsRepository > getAll", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
+    }
+  }
+
+  async delete(id: string): Promise<IDeleteTenantResponseDTO> {
+    try {
+      const tenant = await TenantModel.get(id)
+
+      if (!tenant) {
+        return left(new AppError(ErrorCodes.TENANT_NOT_FOUND))
+      }
+
+      await TenantModel.delete({ id })
+      return right({ success: true })
+    } catch (err) {
+      console.log("[ERROR] TenantsRepository > delete", err)
       return left(new AppError(ErrorCodes.INTERNAL))
     }
   }
