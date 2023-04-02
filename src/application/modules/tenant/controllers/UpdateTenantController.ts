@@ -14,8 +14,6 @@ class UpdateTenantController {
       isActive,
     })
 
-    console.log("payload", { name, responsible, isActive })
-
     if (validation.error) {
       return response.status(400).json({ error: validation.error })
     }
