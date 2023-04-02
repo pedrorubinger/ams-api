@@ -5,6 +5,7 @@ import { sign } from "jsonwebtoken"
 import { JWT_SECRET } from "@config"
 import { JWT_DURATION } from "@config/infra/jwt"
 import { IUsersRepository } from "@application/repositories/IUsersRepository"
+import { ITenantsRepository } from "@application/repositories/ITenantsRepository"
 import {
   IAuthenticateUserDTO,
   IAuthenticateUserResponseDTO,
@@ -17,7 +18,8 @@ import { ErrorCodes } from "@shared/errors/ErrorCodes"
 @injectable()
 class AuthenticateUserUseCase {
   constructor(
-    @inject("UsersRepository") private usersRepository: IUsersRepository
+    @inject("UsersRepository") private usersRepository: IUsersRepository,
+    @inject("TenantsRepository") private tenantsRepository: ITenantsRepository
   ) {}
 
   async execute({
@@ -35,10 +37,25 @@ class AuthenticateUserUseCase {
     }
 
     const { user } = result.value
+    const isMaster = user?.role === "master"
     const passwordsMatch = await compare(password, user.password)
 
     if (!passwordsMatch) {
       return left(new AppError(ErrorCodes.INVALID_CREDENTIALS, 400))
+    }
+
+    if (!isMaster) {
+      const tenantResult = await this.tenantsRepository.find(user.tenantId)
+
+      if (tenantResult.isLeft()) {
+        return left(
+          new AppError(tenantResult.value.message, tenantResult.value.status)
+        )
+      }
+
+      if (!tenantResult.value.tenant.isActive) {
+        return left(new AppError(ErrorCodes.TENANT_IS_NOT_ACTIVE))
+      }
     }
 
     const userData = {

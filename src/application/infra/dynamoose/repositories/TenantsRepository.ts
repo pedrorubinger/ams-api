@@ -14,6 +14,7 @@ import {
   IUpdateTenantResponseDTO,
 } from "@application/modules/tenant/dto/IUpdateTenantDTO"
 import { IDeleteTenantResponseDTO } from "@application/modules/tenant/dto/IDeleteTenantDTO"
+import { IFindTenantResponseDTO } from "@application/modules/tenant/dto/IFindTenantDTO"
 import { left, right } from "@shared/errors/Either"
 import { AppError } from "@shared/errors/AppError"
 import { ErrorCodes } from "@shared/errors/ErrorCodes"
@@ -21,7 +22,10 @@ import { ErrorCodes } from "@shared/errors/ErrorCodes"
 class TenantsRepository implements ITenantsRepository {
   async create(payload: ICreateTenantDTO): Promise<ICreateTenantResponseDTO> {
     try {
-      const tenant = await TenantModel.create(payload)
+      const tenant = await TenantModel.create({
+        ...payload,
+        isActive: payload.isActive === undefined ? true : payload.isActive,
+      })
 
       await tenant.save()
 
@@ -37,6 +41,7 @@ class TenantsRepository implements ITenantsRepository {
       const { id } = payload
       const data: Partial<TenantItem> = {}
 
+      if (payload.isActive !== undefined) data.isActive = !!payload.isActive
       if (payload.name) data.name = payload.name
       if (payload.responsible) data.responsible = payload.responsible
 
@@ -44,6 +49,23 @@ class TenantsRepository implements ITenantsRepository {
 
       await tenant.save()
       return right({ tenant })
+    } catch (err) {
+      console.log("[ERROR] TenantsRepository > update", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
+    }
+  }
+
+  async find(id: string): Promise<IFindTenantResponseDTO> {
+    try {
+      const response = await TenantModel.query("id").eq(id).exec()
+
+      if (!response?.length) {
+        return left(new AppError(ErrorCodes.TENANT_NOT_FOUND, 404))
+      }
+
+      const tenant = { ...response[0] }
+
+      return right({ tenant: tenant as TenantItem })
     } catch (err) {
       console.log("[ERROR] TenantsRepository > update", err)
       return left(new AppError(ErrorCodes.INTERNAL))

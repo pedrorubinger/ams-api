@@ -4,6 +4,7 @@ import { Either } from "@shared/errors/Either"
 
 interface ICreateTenantDTO {
   id?: string
+  isActive?: boolean
   name: string
   responsible: string
 }

@@ -9,6 +9,7 @@ const UpdateTenantValidator = Joi.object({
     "string.base": "RESPONSIBLE_MUST_BE_TEXT",
     "string.max": "RESPONSIBLE_EXCEEDS_LENGTH_100",
   }),
+  isActive: Joi.boolean().optional(),
 })
 
 export { UpdateTenantValidator }

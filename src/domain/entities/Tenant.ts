@@ -4,6 +4,7 @@ import { IEntity } from "@core/domain/Entity"
 interface ITenantProps {
   name: string
   responsible: string
+  isActive?: boolean
 }
 
 type ITenant = IEntity<ITenantProps>

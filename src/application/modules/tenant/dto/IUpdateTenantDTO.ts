@@ -5,6 +5,7 @@ import { Either } from "@shared/errors/Either"
 interface IUpdateTenantDTO {
   id: string
   name?: string
+  isActive?: boolean
   responsible?: string
 }
 

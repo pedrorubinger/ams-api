@@ -16,8 +16,14 @@ class UpdateTenantUseCase {
     id,
     name,
     responsible,
+    isActive,
   }: IUpdateTenantDTO): Promise<IUpdateTenantResponseDTO> {
-    return await this.tenantsRepository.update({ id, name, responsible })
+    return await this.tenantsRepository.update({
+      id,
+      name,
+      responsible,
+      isActive,
+    })
   }
 }
 
