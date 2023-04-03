@@ -3,7 +3,7 @@ import { inject, injectable } from "tsyringe"
 import { IUsersRepository } from "@application/repositories//IUsersRepository"
 import {
   IGetAllUsersParamsDTO,
-  IGetAllUsersResponseDTO
+  IGetAllUsersResponseDTO,
 } from "@application/modules/user/dto/IGetAllUsersReponseDTO"
 
 @injectable()
@@ -18,7 +18,7 @@ class GetAllUsersUseCase {
     return await this.usersRepository.getAll({
       email: params?.email,
       size: params?.size,
-      startAt: params?.startAt
+      startAt: params?.startAt,
     })
   }
 }
