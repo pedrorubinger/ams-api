@@ -33,6 +33,7 @@ import {
   IUpdateUserDTO,
   IUpdateUserResponseDTO,
 } from "@application/modules/user/dto/IUpdateUserDTO"
+import { IDeleteUserResponseDTO } from "@application/modules/user/dto/IDeleteUserResponseDTO"
 import { UserItem } from "@domain/infra/dynamoose/User"
 
 class UsersRepository implements IUsersRepository {
@@ -175,6 +176,20 @@ class UsersRepository implements IUsersRepository {
       })
     } catch (err) {
       console.log("[ERROR] UsersRepository > getAll", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
+    }
+  }
+
+  async delete(id: string): Promise<IDeleteUserResponseDTO> {
+    try {
+      const user = await UserModel.get(id)
+
+      if (!user) return left(new AppError(ErrorCodes.TENANT_NOT_FOUND))
+
+      await UserModel.delete({ id })
+      return right({ success: true })
+    } catch (err) {
+      console.log("[ERROR] UsersRepository > delete", err)
       return left(new AppError(ErrorCodes.INTERNAL))
     }
   }

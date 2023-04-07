@@ -7,6 +7,7 @@ import { FindUserController } from "@application/modules/user/controllers/FindUs
 import { GetAllUsersController } from "@application/modules/user/controllers/GetAllUsersController"
 import { UpdateAccountController } from "@application/modules/user/controllers/UpdateAccountController"
 import { UpdateUserController } from "@application/modules/user/controllers/UpdateUserController"
+import { DeleteUserController } from "@application/modules/user/controllers/DeleteUserController"
 
 const usersRoutes = Router()
 
@@ -15,6 +16,7 @@ const findUserController = new FindUserController()
 const getAllUsersController = new GetAllUsersController()
 const updateAccountController = new UpdateAccountController()
 const updateUserController = new UpdateUserController()
+const deleteUserController = new DeleteUserController()
 
 usersRoutes.post(
   "/",
@@ -41,5 +43,6 @@ usersRoutes.get(
   getAllUsersController.handle
 )
 usersRoutes.put("/", isAuthenticated, updateAccountController.handle)
+usersRoutes.delete("/:id", isAuthenticated, deleteUserController.handle)
 
 export { usersRoutes }

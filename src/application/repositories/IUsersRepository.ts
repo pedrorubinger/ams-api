@@ -16,6 +16,7 @@ import {
   IUpdateUserDTO,
   IUpdateUserResponseDTO,
 } from "@application/modules/user/dto/IUpdateUserDTO"
+import { IDeleteUserResponseDTO } from "@application/modules/user/dto/IDeleteUserResponseDTO"
 
 interface IUsersRepository {
   create(payload: ICreateUserDTO): Promise<ICreateUserResponseDTO>
@@ -28,6 +29,7 @@ interface IUsersRepository {
   find(id: string): Promise<IFindUserResponseDTO>
   findByEmail(email: string): Promise<IFindUserByEmailResponseDTO>
   getAll(params?: IGetAllUsersParamsDTO): Promise<IGetAllUsersResponseDTO>
+  delete(id: string): Promise<IDeleteUserResponseDTO>
 }
 
 export { IUsersRepository }
