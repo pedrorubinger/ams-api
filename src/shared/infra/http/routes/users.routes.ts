@@ -6,6 +6,7 @@ import { CreateUserController } from "@application/modules/user/controllers/Crea
 import { FindUserController } from "@application/modules/user/controllers/FindUserController"
 import { GetAllUsersController } from "@application/modules/user/controllers/GetAllUsersController"
 import { UpdateAccountController } from "@application/modules/user/controllers/UpdateAccountController"
+import { UpdateUserController } from "@application/modules/user/controllers/UpdateUserController"
 
 const usersRoutes = Router()
 
@@ -13,12 +14,19 @@ const createUserController = new CreateUserController()
 const findUserController = new FindUserController()
 const getAllUsersController = new GetAllUsersController()
 const updateAccountController = new UpdateAccountController()
+const updateUserController = new UpdateUserController()
 
 usersRoutes.post(
   "/",
   isAuthenticated,
   isAuthorized({ roles: ["master"] }),
   createUserController.handle
+)
+usersRoutes.put(
+  "/:id",
+  isAuthenticated,
+  isAuthorized({ roles: ["master"] }),
+  updateUserController.handle
 )
 usersRoutes.get(
   "/:id",

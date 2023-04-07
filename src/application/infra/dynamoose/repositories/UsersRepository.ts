@@ -29,6 +29,10 @@ import {
   IUpdateAccountDTO,
   IUpdateAccountResponseDTO,
 } from "@application/modules/user/dto/IUpdateAccountDTO"
+import {
+  IUpdateUserDTO,
+  IUpdateUserResponseDTO,
+} from "@application/modules/user/dto/IUpdateUserDTO"
 import { UserItem } from "@domain/infra/dynamoose/User"
 
 class UsersRepository implements IUsersRepository {
@@ -66,7 +70,7 @@ class UsersRepository implements IUsersRepository {
     }
   }
 
-  async update(
+  async updateAccount(
     payload: Omit<IUpdateAccountDTO, "role" | "password">
   ): Promise<IUpdateAccountResponseDTO> {
     try {
@@ -78,6 +82,26 @@ class UsersRepository implements IUsersRepository {
 
         updatedData.password = hashedPassword
       }
+      if (phone !== undefined) updatedData.phone = phone
+      if (name !== undefined) updatedData.name = name
+
+      const user = await UserModel.update({ id }, updatedData)
+
+      return right({ user })
+    } catch (err) {
+      console.log("[ERROR] UsersRepository > updateAccount", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
+    }
+  }
+
+  async update(
+    payload: Omit<IUpdateUserDTO, "role" | "password">
+  ): Promise<IUpdateUserResponseDTO> {
+    try {
+      const { id, phone, name, tenantId } = payload
+      const updatedData: Partial<UserItem> = {}
+
+      if (tenantId !== undefined) updatedData.tenantId = tenantId
       if (phone !== undefined) updatedData.phone = phone
       if (name !== undefined) updatedData.name = name
 
@@ -139,9 +163,7 @@ class UsersRepository implements IUsersRepository {
         ])
         .limit(params?.size ?? 5)
 
-      if (params?.startAt) {
-        scan.startAt({ id: params.startAt })
-      }
+      if (params?.startAt) scan.startAt({ id: params.startAt })
 
       const users = await scan.exec()
 

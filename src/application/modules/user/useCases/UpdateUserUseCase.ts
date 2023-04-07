@@ -2,14 +2,14 @@ import { inject, injectable } from "tsyringe"
 
 import { IUsersRepository } from "@application/repositories/IUsersRepository"
 import {
-  IUpdateAccountDTO,
-  IUpdateAccountResponseDTO,
-} from "@application/modules/user/dto/IUpdateAccountDTO"
+  IUpdateUserDTO,
+  IUpdateUserResponseDTO,
+} from "@application/modules/user/dto/IUpdateUserDTO"
 import { left, right } from "@shared/errors/Either"
 import { AppError } from "@shared/errors/AppError"
 
 @injectable()
-class UpdateAccountUseCase {
+class UpdateUserUseCase {
   constructor(
     @inject("UsersRepository") private usersRepository: IUsersRepository
   ) {}
@@ -17,16 +17,14 @@ class UpdateAccountUseCase {
   async execute({
     id,
     name,
-    tenantId,
-    newPassword,
     phone,
-  }: IUpdateAccountDTO): Promise<IUpdateAccountResponseDTO> {
-    const result = await this.usersRepository.updateAccount({
+    tenantId,
+  }: IUpdateUserDTO): Promise<IUpdateUserResponseDTO> {
+    const result = await this.usersRepository.update({
       id,
-      newPassword,
-      tenantId,
       name,
       phone,
+      tenantId,
     })
 
     if (result.isLeft()) {
@@ -41,4 +39,4 @@ class UpdateAccountUseCase {
   }
 }
 
-export { UpdateAccountUseCase }
+export { UpdateUserUseCase }

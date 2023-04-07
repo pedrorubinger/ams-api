@@ -6,14 +6,14 @@ import { CreateUserValidator } from "@domain/infra/joi"
 
 class CreateUserController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { tenantId } = request.user
-    const { name, email, password, phone, role } = request.body
+    const { name, email, password, phone, role, tenantId } = request.body
     const validation = CreateUserValidator.validate({
+      tenantId,
       name,
       email,
       password,
       phone,
-      role
+      role,
     })
 
     if (validation.error) {
@@ -27,7 +27,7 @@ class CreateUserController {
       password,
       phone,
       tenantId,
-      role
+      role,
     })
 
     if (result.isLeft()) {
