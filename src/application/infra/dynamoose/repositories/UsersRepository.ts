@@ -47,13 +47,7 @@ class UsersRepository implements IUsersRepository {
       let result: CreateTransactionInput
 
       await dynamoose.transaction(
-        [
-          (result = await UserModel.transaction.create(payload)),
-          await UserModel.transaction.create({
-            id: `email#${payload.email}`,
-            tenantId: payload.tenantId,
-          }),
-        ],
+        [(result = await UserModel.transaction.create(payload))],
         settings
       )
 
@@ -149,27 +143,28 @@ class UsersRepository implements IUsersRepository {
     params?: IGetAllUsersParamsDTO
   ): Promise<IGetAllUsersResponseDTO> {
     try {
-      const scan = UserModel.scan({
-        email: { beginsWith: params?.email ?? "", and: { exists: true } },
-      })
-        .attributes([
-          "id",
-          "tenantId",
-          "email",
-          "name",
-          "role",
-          "phone",
-          "createdAt",
-          "updatedAt",
-        ])
-        .limit(params?.size ?? 5)
+      const haveFilters = !!params?.email
+      const scan = UserModel.scan().attributes([
+        "id",
+        "tenantId",
+        "email",
+        "name",
+        "role",
+        "phone",
+        "createdAt",
+        "updatedAt",
+      ])
 
       if (params?.startAt) scan.startAt({ id: params.startAt })
+      if (params?.email) scan.where("email").eq(params.email)
+      if (!haveFilters) scan.limit(params?.size ?? 5)
 
+      const total = await UserModel.scan().count().exec()
       const users = await scan.exec()
 
       return right({
         users,
+        total: total.count,
         lastKey: !users?.count
           ? null
           : ((users?.lastKey?.id ?? null) as string | null),
