@@ -1,5 +1,12 @@
+import * as dynamoose from "dynamoose"
+import {
+  TransactionReturnOptions,
+  TransactionSettings,
+} from "dynamoose/dist/Transaction"
+
+import { TransactionType } from "@config/infra/dynamoose/TransactionType"
 import { TenantItem } from "@domain/infra/dynamoose/Tenant"
-import { TenantModel } from "@domain/infra/dynamoose"
+import { TenantModel, UserModel } from "@domain/infra/dynamoose"
 import { ITenantsRepository } from "@application/repositories/ITenantsRepository"
 import {
   ICreateTenantDTO,
@@ -106,7 +113,24 @@ class TenantsRepository implements ITenantsRepository {
         return left(new AppError(ErrorCodes.TENANT_NOT_FOUND))
       }
 
-      await TenantModel.delete({ id })
+      const users = await UserModel.scan("tenantId").eq(id).exec()
+
+      const settings: TransactionSettings = {
+        return: TransactionReturnOptions.items,
+        type: "write" as unknown as TransactionType,
+      }
+
+      if (users.length) {
+        const userRequests = users.map((user) =>
+          UserModel.transaction.delete({ id: user.id })
+        )
+        const tenantRequest = TenantModel.transaction.delete({ id })
+
+        await dynamoose.transaction([...userRequests, tenantRequest], settings)
+      } else {
+        await TenantModel.delete({ id })
+      }
+
       return right({ success: true })
     } catch (err) {
       console.log("[ERROR] TenantsRepository > delete", err)
