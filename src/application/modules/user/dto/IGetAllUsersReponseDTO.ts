@@ -1,5 +1,3 @@
-import { ScanResponse } from "dynamoose/dist/ItemRetriever"
-
 import { AppError } from "@shared/errors/AppError"
 import { Either } from "@shared/errors/Either"
 import { UserItem } from "@domain/infra/dynamoose/User"
@@ -11,9 +9,16 @@ interface IGetAllUsersParamsDTO {
   startAt?: string
 }
 
-type IGetAllUsersResponseDTO = Either<
-  AppError,
-  { users: ScanResponse<UserItem>; lastKey: string | null }
->
+type IUserWithTenantName = UserItem & {
+  tenantName: string
+}
 
-export { IGetAllUsersResponseDTO, IGetAllUsersParamsDTO }
+interface IGetAllUsersOutput {
+  users: IUserWithTenantName[]
+  lastKey: string | null
+  total: number
+}
+
+type IGetAllUsersResponseDTO = Either<AppError, IGetAllUsersOutput>
+
+export { IGetAllUsersResponseDTO, IGetAllUsersParamsDTO, IUserWithTenantName }

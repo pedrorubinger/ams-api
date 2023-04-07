@@ -14,7 +14,8 @@ import {
   ICreateUserOutput,
   ICreateUserResponseDTO,
 } from "@application/modules/user/dto/ICreateUserDTO"
-import { UserModel } from "@domain/infra/dynamoose"
+import { TenantModel, UserModel } from "@domain/infra/dynamoose"
+import { UserItem } from "@domain/infra/dynamoose/User"
 import { AppError } from "@shared/errors/AppError"
 import { ErrorCodes } from "@shared/errors/ErrorCodes"
 import { left, right } from "@shared/errors/Either"
@@ -24,6 +25,7 @@ import { IFindUserByEmailResponseDTO } from "@application/modules/user/dto/IFind
 import {
   IGetAllUsersParamsDTO,
   IGetAllUsersResponseDTO,
+  IUserWithTenantName,
 } from "@application/modules/user/dto/IGetAllUsersReponseDTO"
 import {
   IUpdateAccountDTO,
@@ -34,7 +36,6 @@ import {
   IUpdateUserResponseDTO,
 } from "@application/modules/user/dto/IUpdateUserDTO"
 import { IDeleteUserResponseDTO } from "@application/modules/user/dto/IDeleteUserResponseDTO"
-import { UserItem } from "@domain/infra/dynamoose/User"
 
 class UsersRepository implements IUsersRepository {
   async create(payload: ICreateUserDTO): Promise<ICreateUserResponseDTO> {
@@ -162,8 +163,20 @@ class UsersRepository implements IUsersRepository {
       const total = await UserModel.scan().count().exec()
       const users = await scan.exec()
 
+      // Gets the tenant name for each user
+      const promises = users.map(async (user) => {
+        const tenant = await TenantModel.get(user.tenantId)
+
+        return {
+          ...user,
+          tenantName: tenant?.name || user?.tenantId,
+        }
+      })
+
+      const result = await Promise.all(promises)
+
       return right({
-        users,
+        users: result as IUserWithTenantName[],
         total: total.count,
         lastKey: !users?.count
           ? null
