@@ -5,10 +5,10 @@ const startDynamoDatabase = () => {
     /* Create new DynamoDB instance */
     const DynamoDatabase = new dynamoose.aws.ddb.DynamoDB({
       credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string
+        accessKeyId: process.env.DETA_AWS_ACCESS_KEY_ID as string,
+        secretAccessKey: process.env.DETA_AWS_SECRET_ACCESS_KEY as string,
       },
-      region: process.env.AWS_REGION as string
+      region: process.env.DETA_AWS_REGION as string,
     })
 
     /* Set DynamoDB instance to the Dynamoose DDB instance */
