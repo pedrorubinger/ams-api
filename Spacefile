@@ -10,11 +10,13 @@ micros:
       - dist
     run: "node dist/index.js"
     primary: true
-    public_routes:
-      - "/"
-      - "/users"
+    public_routes: ["/*"]
     presets:
       env:
+        - name: STAGE
+          description: Development stage ("dev" or "production").
+          default: ""
+
         - name: JWT_SECRET
           description: JSON web token secret key.
           default: ""
