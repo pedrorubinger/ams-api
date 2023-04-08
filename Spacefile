@@ -1,0 +1,32 @@
+# Spacefile Docs: https://go.deta.dev/docs/spacefile/v0
+v: 0
+micros:
+  - name: ams-api
+    src: ./
+    engine: nodejs16
+    commands:
+      - npm run build
+    include:
+      - dist
+    run: "node dist/index.js"
+    primary: true
+    public_routes:
+      - "/"
+      - "/users"
+    presets:
+      env:
+        - name: JWT_SECRET
+          description: JSON web token secret key.
+          default: ""
+
+        - name: DETA_AWS_ACCESS_KEY_ID
+          description: Key to authenticate access to AWS resources.
+          default: ""
+
+        - name: DETA_AWS_SECRET_ACCESS_KEY
+          description: Confidential key to authenticate access to AWS resources.
+          default: ""
+
+        - name: DETA_AWS_REGION
+          description: Key used to determine the physical location of the resources.
+          default: ""
