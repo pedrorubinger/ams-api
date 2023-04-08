@@ -20,8 +20,8 @@ const deleteUserController = new DeleteUserController()
 
 usersRoutes.post(
   "/",
-  // isAuthenticated,
-  // isAuthorized({ roles: ["master"] }),
+  isAuthenticated,
+  isAuthorized({ roles: ["master"] }),
   createUserController.handle
 )
 usersRoutes.put(
