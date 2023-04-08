@@ -11,6 +11,7 @@ class UserItem extends Item {
   tenantId!: string
   role!: IRole
   phone?: string
+  isActive!: boolean
   createdAt!: number
   updatedAt!: number
 }
@@ -22,18 +23,19 @@ const UserSchema = new dynamoose.Schema(
     email: {
       type: String,
       required: false,
-      index: { name: "emailIndex", type: "global" }
+      index: { name: "emailIndex", type: "global" },
     },
     name: { type: String, required: false },
     password: { type: String, required: false },
     role: { type: String, required: false },
-    phone: { type: String, required: false }
+    phone: { type: String, required: false },
+    isActive: { type: Boolean, required: false, default: true },
   },
   {
     timestamps: {
       createdAt: "createdAt",
-      updatedAt: "updatedAt"
-    }
+      updatedAt: "updatedAt",
+    },
   }
 )
 

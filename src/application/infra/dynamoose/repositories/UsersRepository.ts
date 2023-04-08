@@ -1,11 +1,3 @@
-import * as dynamoose from "dynamoose"
-import * as dynamoUtils from "@aws-sdk/util-dynamodb"
-import { AttributeValue } from "@aws-sdk/client-dynamodb"
-import {
-  TransactionReturnOptions,
-  TransactionSettings,
-  CreateTransactionInput,
-} from "dynamoose/dist/Transaction"
 import { hash } from "bcrypt"
 
 import { IUsersRepository } from "@application/repositories/IUsersRepository"
@@ -19,7 +11,6 @@ import { UserItem } from "@domain/infra/dynamoose/User"
 import { AppError } from "@shared/errors/AppError"
 import { ErrorCodes } from "@shared/errors/ErrorCodes"
 import { left, right } from "@shared/errors/Either"
-import { TransactionType } from "@config/infra/dynamoose/TransactionType"
 import { IFindUserResponseDTO } from "@application/modules/user/dto/IFindUserDTO"
 import { IFindUserByEmailResponseDTO } from "@application/modules/user/dto/IFindUserByEmailDTO"
 import {
@@ -40,26 +31,15 @@ import { IDeleteUserResponseDTO } from "@application/modules/user/dto/IDeleteUse
 class UsersRepository implements IUsersRepository {
   async create(payload: ICreateUserDTO): Promise<ICreateUserResponseDTO> {
     try {
-      const settings: TransactionSettings = {
-        return: TransactionReturnOptions.items,
-        type: "write" as unknown as TransactionType,
-      }
+      const user = await UserModel.create({
+        ...payload,
+        isActive: payload.isActive === undefined ? true : payload.isActive,
+      })
+      const createdUser = { ...user, password: undefined }
 
-      let result: CreateTransactionInput
-
-      await dynamoose.transaction(
-        [(result = await UserModel.transaction.create(payload))],
-        settings
-      )
-
-      const user = {
-        ...dynamoUtils.unmarshall(
-          result.Put.Item as Record<string, AttributeValue>
-        ),
-      }
-
-      delete user.password
-      return right({ user: user as ICreateUserOutput })
+      createdUser.password = undefined
+      delete createdUser.password
+      return right({ user: createdUser as ICreateUserOutput })
     } catch (err) {
       console.log("[ERROR] UsersRepository > create", err)
       return left(new AppError(ErrorCodes.INTERNAL))
@@ -94,10 +74,11 @@ class UsersRepository implements IUsersRepository {
     payload: Omit<IUpdateUserDTO, "role" | "password">
   ): Promise<IUpdateUserResponseDTO> {
     try {
-      const { id, phone, name, tenantId } = payload
+      const { id, phone, name, tenantId, isActive } = payload
       const updatedData: Partial<UserItem> = {}
 
       if (tenantId !== undefined) updatedData.tenantId = tenantId
+      if (isActive !== undefined) updatedData.isActive = !!isActive
       if (phone !== undefined) updatedData.phone = phone
       if (name !== undefined) updatedData.name = name
 
@@ -152,6 +133,7 @@ class UsersRepository implements IUsersRepository {
         "name",
         "role",
         "phone",
+        "isActive",
         "createdAt",
         "updatedAt",
       ])

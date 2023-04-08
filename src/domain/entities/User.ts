@@ -9,6 +9,7 @@ interface IUserProps {
   email: string
   password: string
   role: IRole
+  isActive: boolean
   phone?: string
 }
 

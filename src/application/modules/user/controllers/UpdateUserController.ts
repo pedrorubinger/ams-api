@@ -7,8 +7,13 @@ import { UpdateUserUseCase } from "@application/modules/user/useCases/UpdateUser
 class UpdateUserController {
   async handle(request: Request, response: Response): Promise<Response> {
     const { id } = request.params
-    const { name, phone, tenantId } = request.body
-    const validation = UpdateUserValidator.validate({ name, phone, tenantId })
+    const { name, phone, tenantId, isActive } = request.body
+    const validation = UpdateUserValidator.validate({
+      name,
+      phone,
+      tenantId,
+      isActive,
+    })
 
     if (validation.error) {
       return response.status(400).json({ error: validation.error })
@@ -20,6 +25,7 @@ class UpdateUserController {
       name,
       phone,
       tenantId,
+      isActive,
     })
 
     if (result.isLeft()) {

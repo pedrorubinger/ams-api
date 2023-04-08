@@ -4,7 +4,7 @@ import { inject, injectable } from "tsyringe"
 import { IUsersRepository } from "@application/repositories/IUsersRepository"
 import {
   ICreateUserDTO,
-  ICreateUserResponseDTO
+  ICreateUserResponseDTO,
 } from "@application/modules/user/dto/ICreateUserDTO"
 import { User } from "@domain/entities/User"
 import { ErrorCodes } from "@shared/errors/ErrorCodes"
@@ -23,7 +23,8 @@ class CreateUserUseCase {
     tenantId,
     password,
     role,
-    phone
+    phone,
+    isActive,
   }: ICreateUserDTO): Promise<ICreateUserResponseDTO> {
     const result = await this.usersRepository.findByEmail(email)
 
@@ -39,10 +40,11 @@ class CreateUserUseCase {
     const user = User.create({
       name,
       email,
+      isActive: isActive === undefined ? true : !!isActive,
       password: hashedPassword,
       role,
       tenantId,
-      phone
+      phone,
     })
     const payload = { ...user.props, id: user.id }
 

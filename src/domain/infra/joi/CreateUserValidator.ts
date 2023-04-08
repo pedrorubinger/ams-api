@@ -32,6 +32,7 @@ const CreateUserValidator = Joi.object({
     "string.base": "ROLE_MUST_BE_TEXT",
     "string.valid": "ROLE_IS_INVALID",
   }),
+  isActive: Joi.boolean().optional(),
 })
 
 export { CreateUserValidator }

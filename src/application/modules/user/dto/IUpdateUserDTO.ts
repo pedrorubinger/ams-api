@@ -9,6 +9,7 @@ interface IUpdateUserDTO {
   name?: string
   phone?: string
   tenantId?: string
+  isActive?: boolean
   // email?: string
 }
 

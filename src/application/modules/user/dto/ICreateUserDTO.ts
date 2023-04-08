@@ -13,6 +13,7 @@ interface ICreateUserDTO {
   password: string
   phone?: string
   role: IRole
+  isActive?: boolean
 }
 
 type ICreateUserResponseDTO = Either<AppError, { user: ICreateUserOutput }>

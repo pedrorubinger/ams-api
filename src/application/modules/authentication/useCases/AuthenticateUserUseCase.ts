@@ -45,6 +45,10 @@ class AuthenticateUserUseCase {
     }
 
     if (!isMaster) {
+      if (!user.isActive) {
+        return left(new AppError(ErrorCodes.USER_IS_NOT_ACTIVE, 401))
+      }
+
       const tenantResult = await this.tenantsRepository.find(user.tenantId)
 
       if (tenantResult.isLeft()) {

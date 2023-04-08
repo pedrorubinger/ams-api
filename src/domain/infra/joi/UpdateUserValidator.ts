@@ -13,6 +13,7 @@ const UpdateUserValidator = Joi.object({
     "string.base": "PHONE_MUST_BE_TEXT",
     "string.max": "PHONE_EXCEEDS_LENGTH_40",
   }),
+  isActive: Joi.boolean().optional(),
 })
 
 export { UpdateUserValidator }

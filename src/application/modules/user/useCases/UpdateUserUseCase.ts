@@ -19,12 +19,14 @@ class UpdateUserUseCase {
     name,
     phone,
     tenantId,
+    isActive,
   }: IUpdateUserDTO): Promise<IUpdateUserResponseDTO> {
     const result = await this.usersRepository.update({
       id,
       name,
       phone,
       tenantId,
+      isActive,
     })
 
     if (result.isLeft()) {
