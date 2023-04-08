@@ -17,3 +17,5 @@ app.use(router)
 app.listen(config.PORT, () =>
   console.log(`[ON] Server is running at ${config.HOST}:${config.PORT}`)
 )
+
+module.exports = app
