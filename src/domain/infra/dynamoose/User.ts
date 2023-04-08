@@ -2,6 +2,7 @@ import * as dynamoose from "dynamoose"
 import { Item } from "dynamoose/dist/Item"
 
 import { IRole } from "@domain/entities/User"
+import { getDynamoTableName } from "@shared/infra/dynamoose/helpers"
 
 class UserItem extends Item {
   id!: string
@@ -39,6 +40,9 @@ const UserSchema = new dynamoose.Schema(
   }
 )
 
-const UserModel = dynamoose.model<UserItem>("User", UserSchema)
+const UserModel = dynamoose.model<UserItem>(
+  getDynamoTableName("User"),
+  UserSchema
+)
 
 export { UserModel, UserItem }

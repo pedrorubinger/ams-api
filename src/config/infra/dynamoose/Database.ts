@@ -13,7 +13,6 @@ const startDynamoDatabase = () => {
 
     /* Set DynamoDB instance to the Dynamoose DDB instance */
     dynamoose.aws.ddb.set(DynamoDatabase)
-    console.log("Database started!")
   } catch (err) {
     console.log("[ERROR]: Error trying to connect to Dynamo Database:", err)
   }

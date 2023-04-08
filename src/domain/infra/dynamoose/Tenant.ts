@@ -1,5 +1,6 @@
 import * as dynamoose from "dynamoose"
 import { Item } from "dynamoose/dist/Item"
+import { getDynamoTableName } from "@shared/infra/dynamoose/helpers"
 
 class TenantItem extends Item {
   id!: string
@@ -26,6 +27,9 @@ const TenantSchema = new dynamoose.Schema(
   }
 )
 
-const TenantModel = dynamoose.model<TenantItem>("Tenant", TenantSchema)
+const TenantModel = dynamoose.model<TenantItem>(
+  getDynamoTableName("Tenant"),
+  TenantSchema
+)
 
 export { TenantModel, TenantItem }

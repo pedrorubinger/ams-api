@@ -5,16 +5,12 @@ const UpdateAccountValidator = Joi.object({
     "string.base": "NAME_MUST_BE_TEXT",
     "string.max": "NAME_EXCEEDS_LENGTH_100",
   }),
-  password: Joi.string()
-    .required()
-    .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
-    .messages({
-      "string.base": "PASSWORD_MUST_BE_TEXT",
-      "any.required": "PASSWORD_IS_REQUIRED",
-      "string.pattern": "PASSWORD_IS_INVALID",
-    }),
+  password: Joi.string().required().messages({
+    "string.base": "PASSWORD_MUST_BE_TEXT",
+    "any.required": "PASSWORD_IS_REQUIRED",
+    "string.pattern": "PASSWORD_IS_INVALID",
+  }),
   newPassword: Joi.string()
-    .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
     .when(Joi.ref("password"), {
       is: Joi.exist(),
       then: Joi.not(Joi.ref("password")),
