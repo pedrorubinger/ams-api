@@ -1,19 +1,140 @@
+import * as dynamoose from "dynamoose"
+import {
+  TransactionReturnOptions,
+  TransactionSettings,
+} from "dynamoose/dist/Transaction"
+
+import { TransactionType } from "@config/infra/dynamoose/TransactionType"
+import { TenantItem } from "@domain/infra/dynamoose/Tenant"
+import { TenantModel, UserModel } from "@domain/infra/dynamoose"
 import { ITenantsRepository } from "@application/repositories/ITenantsRepository"
-import { ICreateTenantDTO } from "@application/modules/tenant/dto/ICreateTenantDTO"
-import { TenantModel } from "@domain/infra/dynamoose"
-import { ITenant } from "@domain/entities/Tenant"
+import {
+  ICreateTenantDTO,
+  ICreateTenantResponseDTO,
+} from "@application/modules/tenant/dto/ICreateTenantDTO"
+import {
+  IGetAllTenantsParamsDTO,
+  IGetAllTenantsResponseDTO,
+} from "@application/modules/tenant/dto/IGetAllTenantsResponseDTO"
+import {
+  IUpdateTenantDTO,
+  IUpdateTenantResponseDTO,
+} from "@application/modules/tenant/dto/IUpdateTenantDTO"
+import { IDeleteTenantResponseDTO } from "@application/modules/tenant/dto/IDeleteTenantDTO"
+import { IFindTenantResponseDTO } from "@application/modules/tenant/dto/IFindTenantDTO"
+import { left, right } from "@shared/errors/Either"
+import { AppError } from "@shared/errors/AppError"
+import { ErrorCodes } from "@shared/errors/ErrorCodes"
 
 class TenantsRepository implements ITenantsRepository {
-  async create(payload: ICreateTenantDTO): Promise<ITenant> {
+  async create(payload: ICreateTenantDTO): Promise<ICreateTenantResponseDTO> {
     try {
-      const tenant = await TenantModel.create(payload)
+      const tenant = await TenantModel.create({
+        ...payload,
+        isActive: payload.isActive === undefined ? true : payload.isActive,
+      })
 
       await tenant.save()
 
-      return tenant
+      return right({ tenant })
     } catch (err) {
-      console.log("[ERROR] TenantsRepository > create:", err)
-      throw new Error("Something went wrong!")
+      console.log("[ERROR] TenantsRepository > create", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
+    }
+  }
+
+  async update(payload: IUpdateTenantDTO): Promise<IUpdateTenantResponseDTO> {
+    try {
+      const { id } = payload
+      const data: Partial<TenantItem> = {}
+
+      if (payload.isActive !== undefined) data.isActive = !!payload.isActive
+      if (payload.name) data.name = payload.name
+      if (payload.responsible) data.responsible = payload.responsible
+
+      const tenant = await TenantModel.update({ id }, data)
+
+      await tenant.save()
+      return right({ tenant })
+    } catch (err) {
+      console.log("[ERROR] TenantsRepository > update", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
+    }
+  }
+
+  async find(id: string): Promise<IFindTenantResponseDTO> {
+    try {
+      const response = await TenantModel.query("id").eq(id).exec()
+
+      if (!response?.length) {
+        return left(new AppError(ErrorCodes.TENANT_NOT_FOUND, 404))
+      }
+
+      const tenant = { ...response[0] }
+
+      return right({ tenant: tenant as TenantItem })
+    } catch (err) {
+      console.log("[ERROR] TenantsRepository > update", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
+    }
+  }
+
+  async getAll(
+    params?: IGetAllTenantsParamsDTO
+  ): Promise<IGetAllTenantsResponseDTO> {
+    try {
+      const scan = TenantModel.scan()
+
+      if (params?.startAt) {
+        scan.startAt({ id: params.startAt })
+      }
+
+      const total = await TenantModel.scan().count().exec()
+      const tenants = await scan.limit(params?.size ?? 5).exec()
+
+      return right({
+        tenants,
+        total: total.count,
+        lastKey: !tenants?.count
+          ? null
+          : ((tenants?.lastKey?.id ?? null) as string | null),
+      })
+    } catch (err) {
+      console.log("[ERROR] TenantsRepository > getAll", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
+    }
+  }
+
+  async delete(id: string): Promise<IDeleteTenantResponseDTO> {
+    try {
+      const tenant = await TenantModel.get(id)
+
+      if (!tenant) {
+        return left(new AppError(ErrorCodes.TENANT_NOT_FOUND))
+      }
+
+      const users = await UserModel.scan("tenantId").eq(id).exec()
+
+      const settings: TransactionSettings = {
+        return: TransactionReturnOptions.items,
+        type: "write" as unknown as TransactionType,
+      }
+
+      if (users.length) {
+        const userRequests = users.map((user) =>
+          UserModel.transaction.delete({ id: user.id })
+        )
+        const tenantRequest = TenantModel.transaction.delete({ id })
+
+        await dynamoose.transaction([...userRequests, tenantRequest], settings)
+      } else {
+        await TenantModel.delete({ id })
+      }
+
+      return right({ success: true })
+    } catch (err) {
+      console.log("[ERROR] TenantsRepository > delete", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
     }
   }
 }
