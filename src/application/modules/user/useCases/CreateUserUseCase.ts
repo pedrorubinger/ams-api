@@ -1,15 +1,13 @@
 import { hash } from "bcrypt"
 import { inject, injectable } from "tsyringe"
 
-import { IUsersRepository } from "@application/repositories/IUsersRepository"
+import { User } from "@domain/entities"
+import { IUsersRepository } from "@application/repositories"
 import {
   ICreateUserDTO,
   ICreateUserResponseDTO,
-} from "@application/modules/user/dto/ICreateUserDTO"
-import { User } from "@domain/entities/User"
-import { ErrorCodes } from "@shared/errors/ErrorCodes"
-import { left } from "@shared/errors/Either"
-import { AppError } from "@shared/errors/AppError"
+} from "@application/modules/user"
+import { left, AppError, ErrorCodes } from "@shared/errors"
 
 @injectable()
 class CreateUserUseCase {

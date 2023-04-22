@@ -1,13 +1,14 @@
 import { Router } from "express"
 
-import { isAuthenticated } from "@shared/infra/http/middlewares/isAuthenticated"
-import { isAuthorized } from "@shared/infra/http/middlewares/isAuthorized"
-import { CreateUserController } from "@application/modules/user/controllers/CreateUserController"
-import { FindUserController } from "@application/modules/user/controllers/FindUserController"
-import { GetAllUsersController } from "@application/modules/user/controllers/GetAllUsersController"
-import { UpdateAccountController } from "@application/modules/user/controllers/UpdateAccountController"
-import { UpdateUserController } from "@application/modules/user/controllers/UpdateUserController"
-import { DeleteUserController } from "@application/modules/user/controllers/DeleteUserController"
+import { isAuthenticated, isAuthorized } from "@shared/infra/http/middlewares"
+import {
+  CreateUserController,
+  FindUserController,
+  GetAllUsersController,
+  UpdateAccountController,
+  UpdateUserController,
+  DeleteUserController,
+} from "@application/modules/user"
 
 const usersRoutes = Router()
 

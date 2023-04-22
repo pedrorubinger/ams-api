@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { container } from "tsyringe"
 
-import { GetAllTenantsUseCase } from "@application/modules/tenant/useCases/GetAllTenantsUseCase"
+import { GetAllTenantsUseCase } from "@application/modules/tenant"
 
 class GetAllTenantsController {
   async handle(request: Request, response: Response): Promise<Response> {

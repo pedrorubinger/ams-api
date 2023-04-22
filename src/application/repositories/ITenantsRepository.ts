@@ -1,17 +1,13 @@
 import {
   ICreateTenantDTO,
   ICreateTenantResponseDTO,
-} from "@application/modules/tenant/dto/ICreateTenantDTO"
-import {
   IUpdateTenantDTO,
   IUpdateTenantResponseDTO,
-} from "@application/modules/tenant/dto/IUpdateTenantDTO"
-import {
   IGetAllTenantsParamsDTO,
   IGetAllTenantsResponseDTO,
-} from "@application/modules/tenant/dto/IGetAllTenantsResponseDTO"
-import { IDeleteTenantResponseDTO } from "@application/modules/tenant/dto/IDeleteTenantDTO"
-import { IFindTenantResponseDTO } from "../modules/tenant/dto/IFindTenantDTO"
+  IDeleteTenantResponseDTO,
+  IFindTenantResponseDTO,
+} from "@application/modules/tenant"
 
 interface ITenantsRepository {
   create(payload: ICreateTenantDTO): Promise<ICreateTenantResponseDTO>

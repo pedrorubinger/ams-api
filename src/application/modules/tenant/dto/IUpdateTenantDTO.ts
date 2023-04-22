@@ -1,14 +1,11 @@
-import { ITenant } from "@domain/entities/Tenant"
-import { AppError } from "@shared/errors/AppError"
-import { Either } from "@shared/errors/Either"
+import { ITenant } from "@domain/entities"
+import { AppError, Either } from "@shared/errors"
 
-interface IUpdateTenantDTO {
+export interface IUpdateTenantDTO {
   id: string
   name?: string
   isActive?: boolean
   responsible?: string
 }
 
-type IUpdateTenantResponseDTO = Either<AppError, { tenant: ITenant }>
-
-export { IUpdateTenantDTO, IUpdateTenantResponseDTO }
+export type IUpdateTenantResponseDTO = Either<AppError, { tenant: ITenant }>

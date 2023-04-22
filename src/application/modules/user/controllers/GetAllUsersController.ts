@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { container } from "tsyringe"
 
-import { GetAllUsersUseCase } from "@application/modules/user/useCases/GetAllUsersUseCase"
+import { GetAllUsersUseCase } from "@application/modules/user"
 
 class GetAllUsersController {
   async handle(request: Request, response: Response): Promise<Response> {
@@ -11,7 +11,7 @@ class GetAllUsersController {
     const result = await getAllUsersUseCase.execute({
       email: email as string | undefined,
       startAt: startAt as string | undefined,
-      size: (size as string | undefined) ? Number(size) : undefined
+      size: (size as string | undefined) ? Number(size) : undefined,
     })
 
     if (result.isLeft()) {

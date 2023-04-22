@@ -2,9 +2,11 @@ import { Request, Response } from "express"
 import { container } from "tsyringe"
 
 import { UpdateAccountValidator } from "@domain/infra/joi"
-import { AuthenticateUserUseCase } from "@application/modules/authentication/useCases/AuthenticateUserUseCase"
-import { UpdateAccountUseCase } from "@application/modules/user/useCases/UpdateAccountUseCase"
-import { ValidateUserPasswordUseCase } from "@application/modules/user/useCases/ValidateUserPasswordUseCase"
+import { AuthenticateUserUseCase } from "@application/modules/authentication"
+import {
+  ValidateUserPasswordUseCase,
+  UpdateAccountUseCase,
+} from "@application/modules/user"
 
 class UpdateAccountController {
   async handle(request: Request, response: Response): Promise<Response> {

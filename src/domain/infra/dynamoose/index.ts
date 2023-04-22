@@ -1,4 +1,2 @@
-import { TenantModel } from "@domain/infra/dynamoose/Tenant"
-import { UserModel } from "@domain/infra/dynamoose/User"
-
-export { TenantModel, UserModel }
+export * from "@domain/infra/dynamoose/Tenant"
+export * from "@domain/infra/dynamoose/User"

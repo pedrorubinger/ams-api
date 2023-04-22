@@ -1,0 +1,5 @@
+export * from "application/modules/tenant/dto/ICreateTenantDTO"
+export * from "application/modules/tenant/dto/IDeleteTenantDTO"
+export * from "application/modules/tenant/dto/IFindTenantDTO"
+export * from "application/modules/tenant/dto/IGetAllTenantsResponseDTO"
+export * from "application/modules/tenant/dto/IUpdateTenantDTO"

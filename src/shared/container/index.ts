@@ -1,9 +1,10 @@
 import { container } from "tsyringe"
 
-import { TenantsRepository } from "@application/infra/dynamoose/repositories/TenantsRepository"
-import { ITenantsRepository } from "@application/repositories/ITenantsRepository"
-import { IUsersRepository } from "@application/repositories/IUsersRepository"
-import { UsersRepository } from "@application/infra/dynamoose/repositories/UsersRepository"
+import {
+  TenantsRepository,
+  UsersRepository,
+} from "@application/infra/dynamoose/repositories"
+import { ITenantsRepository, IUsersRepository } from "@application/repositories"
 
 container.registerSingleton<ITenantsRepository>(
   "TenantsRepository",

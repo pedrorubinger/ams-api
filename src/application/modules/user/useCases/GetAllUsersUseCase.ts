@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe"
 
-import { IUsersRepository } from "@application/repositories//IUsersRepository"
+import { IUsersRepository } from "@application/repositories"
 import {
   IGetAllUsersParamsDTO,
   IGetAllUsersResponseDTO,
-} from "@application/modules/user/dto/IGetAllUsersReponseDTO"
+} from "@application/modules/user"
 
 @injectable()
 class GetAllUsersUseCase {

@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe"
 
-import { ITenantsRepository } from "@application/repositories/ITenantsRepository"
+import { ITenantsRepository } from "@application/repositories"
 import {
   IGetAllTenantsParamsDTO,
-  IGetAllTenantsResponseDTO
-} from "@application/modules/tenant/dto/IGetAllTenantsResponseDTO"
+  IGetAllTenantsResponseDTO,
+} from "@application/modules/tenant"
 
 @injectable()
 class GetAllTenantsUseCase {
@@ -17,7 +17,7 @@ class GetAllTenantsUseCase {
   ): Promise<IGetAllTenantsResponseDTO> {
     return await this.tenantsRepository.getAll({
       size: params?.size,
-      startAt: params?.startAt
+      startAt: params?.startAt,
     })
   }
 }

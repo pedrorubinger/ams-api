@@ -1,5 +1,4 @@
-import { AppError } from "@shared/errors/AppError"
-import { Either } from "@shared/errors/Either"
+import { AppError, Either } from "@shared/errors"
 
 type IValidateUserPasswordOutput = boolean
 

@@ -1,32 +1,23 @@
 import { hash } from "bcrypt"
 
-import { IUsersRepository } from "@application/repositories/IUsersRepository"
+import { TenantModel, UserModel, UserItem } from "@domain/infra/dynamoose"
+import { IUsersRepository } from "@application/repositories"
 import {
   ICreateUserDTO,
   ICreateUserOutput,
   ICreateUserResponseDTO,
-} from "@application/modules/user/dto/ICreateUserDTO"
-import { TenantModel, UserModel } from "@domain/infra/dynamoose"
-import { UserItem } from "@domain/infra/dynamoose/User"
-import { AppError } from "@shared/errors/AppError"
-import { ErrorCodes } from "@shared/errors/ErrorCodes"
-import { left, right } from "@shared/errors/Either"
-import { IFindUserResponseDTO } from "@application/modules/user/dto/IFindUserDTO"
-import { IFindUserByEmailResponseDTO } from "@application/modules/user/dto/IFindUserByEmailDTO"
-import {
+  IFindUserResponseDTO,
+  IFindUserByEmailResponseDTO,
   IGetAllUsersParamsDTO,
   IGetAllUsersResponseDTO,
   IUserWithTenantName,
-} from "@application/modules/user/dto/IGetAllUsersReponseDTO"
-import {
   IUpdateAccountDTO,
   IUpdateAccountResponseDTO,
-} from "@application/modules/user/dto/IUpdateAccountDTO"
-import {
   IUpdateUserDTO,
   IUpdateUserResponseDTO,
-} from "@application/modules/user/dto/IUpdateUserDTO"
-import { IDeleteUserResponseDTO } from "@application/modules/user/dto/IDeleteUserResponseDTO"
+  IDeleteUserResponseDTO,
+} from "@application/modules/user"
+import { left, right, AppError, ErrorCodes } from "@shared/errors"
 
 class UsersRepository implements IUsersRepository {
   async create(payload: ICreateUserDTO): Promise<ICreateUserResponseDTO> {

@@ -1,6 +1,5 @@
-import { IUser } from "@domain/entities/User"
-import { AppError } from "@shared/errors/AppError"
-import { Either } from "@shared/errors/Either"
+import { IUser } from "@domain/entities"
+import { AppError, Either } from "@shared/errors"
 
 type IFindUserByEmailOutput = IUser
 

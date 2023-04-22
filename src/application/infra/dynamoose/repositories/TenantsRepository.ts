@@ -4,27 +4,21 @@ import {
   TransactionSettings,
 } from "dynamoose/dist/Transaction"
 
-import { TransactionType } from "@config/infra/dynamoose/TransactionType"
-import { TenantItem } from "@domain/infra/dynamoose/Tenant"
+import { TransactionType } from "@config/infra/dynamoose"
+import { TenantItem } from "@domain/infra/dynamoose"
 import { TenantModel, UserModel } from "@domain/infra/dynamoose"
-import { ITenantsRepository } from "@application/repositories/ITenantsRepository"
+import { ITenantsRepository } from "@application/repositories"
 import {
   ICreateTenantDTO,
   ICreateTenantResponseDTO,
-} from "@application/modules/tenant/dto/ICreateTenantDTO"
-import {
   IGetAllTenantsParamsDTO,
   IGetAllTenantsResponseDTO,
-} from "@application/modules/tenant/dto/IGetAllTenantsResponseDTO"
-import {
   IUpdateTenantDTO,
   IUpdateTenantResponseDTO,
-} from "@application/modules/tenant/dto/IUpdateTenantDTO"
-import { IDeleteTenantResponseDTO } from "@application/modules/tenant/dto/IDeleteTenantDTO"
-import { IFindTenantResponseDTO } from "@application/modules/tenant/dto/IFindTenantDTO"
-import { left, right } from "@shared/errors/Either"
-import { AppError } from "@shared/errors/AppError"
-import { ErrorCodes } from "@shared/errors/ErrorCodes"
+  IDeleteTenantResponseDTO,
+  IFindTenantResponseDTO,
+} from "@application/modules/tenant"
+import { left, right, AppError, ErrorCodes } from "@shared/errors"
 
 class TenantsRepository implements ITenantsRepository {
   async create(payload: ICreateTenantDTO): Promise<ICreateTenantResponseDTO> {

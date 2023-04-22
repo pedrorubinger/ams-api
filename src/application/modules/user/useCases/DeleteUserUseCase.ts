@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe"
 
-import { IUsersRepository } from "@application/repositories/IUsersRepository"
-import { IDeleteTenantResponseDTO } from "@application/modules/tenant/dto/IDeleteTenantDTO"
+import { IUsersRepository } from "@application/repositories"
+import { IDeleteTenantResponseDTO } from "@application/modules/tenant"
 
 @injectable()
 class DeleteUserUseCase {

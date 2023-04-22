@@ -1,4 +1,2 @@
-import { Entity } from "@core/domain/Entity"
-import { IPaginatedResult } from "@core/dto/IPaginatedResult"
-
-export { Entity, IPaginatedResult }
+export * from "@core/domain/Entity"
+export * from "@core/dto/IPaginatedResult"

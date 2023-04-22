@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import { container } from "tsyringe"
 
 import { UpdateUserValidator } from "@domain/infra/joi"
-import { UpdateUserUseCase } from "@application/modules/user/useCases/UpdateUserUseCase"
+import { UpdateUserUseCase } from "@application/modules/user"
 
 class UpdateUserController {
   async handle(request: Request, response: Response): Promise<Response> {

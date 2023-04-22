@@ -1,5 +1,4 @@
-import { Entity } from "@core"
-import { IEntity } from "@core/domain/Entity"
+import { Entity, IEntity } from "@core"
 
 interface ITenantProps {
   name: string

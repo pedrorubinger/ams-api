@@ -1,6 +1,3 @@
-import { AppError } from "@shared/errors/AppError"
-import { Either } from "@shared/errors/Either"
+import { AppError, Either } from "@shared/errors"
 
-type IDeleteTenantResponseDTO = Either<AppError, { success: boolean }>
-
-export { IDeleteTenantResponseDTO }
+export type IDeleteTenantResponseDTO = Either<AppError, { success: boolean }>

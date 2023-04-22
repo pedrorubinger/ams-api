@@ -1,9 +1,8 @@
 import { inject, injectable } from "tsyringe"
 
-import { IUsersRepository } from "@application/repositories/IUsersRepository"
-import { IFindUserResponseWithoutPasswordDTO } from "@application/modules/user/dto/IFindUserDTO"
-import { left, right } from "@shared/errors/Either"
-import { AppError } from "@shared/errors/AppError"
+import { IUsersRepository } from "@application/repositories"
+import { IFindUserResponseWithoutPasswordDTO } from "@application/modules/user"
+import { left, right, AppError } from "@shared/errors"
 
 @injectable()
 class FindUserUseCase {

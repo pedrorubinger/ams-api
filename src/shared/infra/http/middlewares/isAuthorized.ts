@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 
-import { ErrorCodes } from "@shared/errors/ErrorCodes"
-import { IRole } from "@domain/entities/User"
+import { IRole } from "@domain/entities"
+import { ErrorCodes } from "@shared/errors"
 
 interface IIsAuthorizedParams {
   /** Provided roles are authorized to access the resource. */

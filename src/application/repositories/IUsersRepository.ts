@@ -1,22 +1,16 @@
 import {
   ICreateUserDTO,
   ICreateUserResponseDTO,
-} from "@application/modules/user/dto/ICreateUserDTO"
-import { IFindUserByEmailResponseDTO } from "@application/modules/user/dto/IFindUserByEmailDTO"
-import { IFindUserResponseDTO } from "@application/modules/user/dto/IFindUserDTO"
-import {
+  IFindUserByEmailResponseDTO,
+  IFindUserResponseDTO,
   IGetAllUsersParamsDTO,
   IGetAllUsersResponseDTO,
-} from "@application/modules/user/dto/IGetAllUsersReponseDTO"
-import {
   IUpdateAccountDTO,
   IUpdateAccountResponseDTO,
-} from "@application/modules/user/dto/IUpdateAccountDTO"
-import {
   IUpdateUserDTO,
   IUpdateUserResponseDTO,
-} from "@application/modules/user/dto/IUpdateUserDTO"
-import { IDeleteUserResponseDTO } from "@application/modules/user/dto/IDeleteUserResponseDTO"
+  IDeleteUserResponseDTO,
+} from "@application/modules/user"
 
 interface IUsersRepository {
   create(payload: ICreateUserDTO): Promise<ICreateUserResponseDTO>

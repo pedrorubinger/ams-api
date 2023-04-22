@@ -1,10 +1,10 @@
 import { inject, injectable } from "tsyringe"
 
-import { ITenantsRepository } from "@application/repositories/ITenantsRepository"
+import { ITenantsRepository } from "@application/repositories"
 import {
   IUpdateTenantDTO,
   IUpdateTenantResponseDTO,
-} from "@application/modules/tenant/dto/IUpdateTenantDTO"
+} from "@application/modules/tenant"
 
 @injectable()
 class UpdateTenantUseCase {
