@@ -4,8 +4,8 @@ import { TenantItem } from "@domain/infra/dynamoose"
 import { AppError, Either } from "@shared/errors"
 
 interface IGetAllTenantsParamsDTO {
-  /** @default 5 */
-  size?: number
+  /** @default '5' */
+  size?: string
   startAt?: string
 }
 

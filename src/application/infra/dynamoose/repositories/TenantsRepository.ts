@@ -78,13 +78,14 @@ class TenantsRepository implements ITenantsRepository {
   ): Promise<IGetAllTenantsResponseDTO> {
     try {
       const scan = TenantModel.scan()
+      const limit =
+        params?.size === "all" ? undefined : Number(params?.size || 5)
 
-      if (params?.startAt) {
-        scan.startAt({ id: params.startAt })
-      }
+      if (params?.startAt) scan.startAt({ id: params.startAt })
+      if (limit) scan.limit(limit)
 
       const total = await TenantModel.scan().count().exec()
-      const tenants = await scan.limit(params?.size ?? 5).exec()
+      const tenants = await scan.exec()
 
       return right({
         tenants,

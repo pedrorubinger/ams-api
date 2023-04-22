@@ -11,7 +11,7 @@ class GetAllTenantsController {
 
     const result = await getAllTenantsUseCase.execute({
       startAt: startAt as string | undefined,
-      size: (size as string | undefined) ? Number(size) : undefined,
+      size: size as string | undefined,
     })
 
     if (result.isLeft()) {
