@@ -1,7 +1,5 @@
-import { IUser } from "@domain/entities/User"
-import { AppError } from "@shared/errors/AppError"
-import { Either } from "@shared/errors/Either"
-import { IRole } from "@domain/entities/User"
+import { IUser, IRole } from "@domain/entities"
+import { AppError, Either } from "@shared/errors"
 
 type ICreateUserOutput = Omit<IUser, "password">
 

@@ -1,16 +1,16 @@
 import { container } from "tsyringe"
 
-import { TenantsRepository } from "@application/infra/dynamoose/repositories/TenantsRepository"
-import { ITenantsRepository } from "@application/repositories/ITenantsRepository"
-import { IUsersRepository } from "@application/repositories/IUsersRepository"
-import { UsersRepository } from "@application/infra/dynamoose/repositories/UsersRepository"
+import {
+  PartnersRepository as Partners,
+  TenantsRepository as Tenants,
+  UsersRepository as Users,
+} from "@application/infra/dynamoose/repositories"
+import {
+  IPartnersRepository,
+  ITenantsRepository,
+  IUsersRepository,
+} from "@application/repositories"
 
-container.registerSingleton<ITenantsRepository>(
-  "TenantsRepository",
-  TenantsRepository
-)
-
-container.registerSingleton<IUsersRepository>(
-  "UsersRepository",
-  UsersRepository
-)
+container.registerSingleton<ITenantsRepository>("TenantsRepository", Tenants)
+container.registerSingleton<IUsersRepository>("UsersRepository", Users)
+container.registerSingleton<IPartnersRepository>("PartnersRepository", Partners)

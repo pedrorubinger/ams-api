@@ -1,6 +1,5 @@
-import { AppError } from "@shared/errors/AppError"
-import { Either } from "@shared/errors/Either"
-import { UserItem } from "@domain/infra/dynamoose/User"
+import { UserItem } from "@domain/infra/dynamoose"
+import { AppError, Either } from "@shared/errors"
 
 interface IGetAllUsersParamsDTO {
   /** @default 5 */

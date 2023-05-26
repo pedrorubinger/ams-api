@@ -1,8 +1,10 @@
 import { Router } from "express"
 
-import { AuthenticateUserController } from "@application/modules/authentication/controllers/AuthenticateUserController"
-import { ValidateTokenController } from "@application/modules/authentication/controllers/ValidateTokenController"
-import { isAuthenticated } from "@shared/infra/http/middlewares/isAuthenticated"
+import {
+  AuthenticateUserController,
+  ValidateTokenController,
+} from "@application/modules/authentication/controllers"
+import { isAuthenticated } from "@shared/infra/http/middlewares"
 
 const authenticationRoutes = Router()
 

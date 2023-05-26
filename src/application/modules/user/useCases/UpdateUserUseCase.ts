@@ -1,12 +1,11 @@
 import { inject, injectable } from "tsyringe"
 
-import { IUsersRepository } from "@application/repositories/IUsersRepository"
+import { IUsersRepository } from "@application/repositories"
 import {
   IUpdateUserDTO,
   IUpdateUserResponseDTO,
-} from "@application/modules/user/dto/IUpdateUserDTO"
-import { left, right } from "@shared/errors/Either"
-import { AppError } from "@shared/errors/AppError"
+} from "@application/modules/user"
+import { left, right, AppError } from "@shared/errors"
 
 @injectable()
 class UpdateUserUseCase {

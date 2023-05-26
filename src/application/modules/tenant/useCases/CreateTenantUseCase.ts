@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe"
 
-import { ITenantsRepository } from "@application/repositories/ITenantsRepository"
+import { Tenant } from "@domain/entities"
+import { ITenantsRepository } from "@application/repositories"
 import {
   ICreateTenantDTO,
   ICreateTenantResponseDTO,
-} from "@application/modules/tenant/dto/ICreateTenantDTO"
-import { Tenant } from "@domain/entities/Tenant"
+} from "@application/modules/tenant"
 
 @injectable()
 class CreateTenantUseCase {

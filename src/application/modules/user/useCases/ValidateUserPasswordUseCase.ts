@@ -4,11 +4,9 @@ import { compare } from "bcrypt"
 import {
   IValidateUserPasswordDTO,
   IValidateUserPasswordResponseDTO,
-} from "@application/modules/user/dto/IValidateUserPasswordDTO"
-import { IUsersRepository } from "@application/repositories/IUsersRepository"
-import { left, right } from "@shared/errors/Either"
-import { AppError } from "@shared/errors/AppError"
-import { ErrorCodes } from "@shared/errors/ErrorCodes"
+} from "@application/modules/user"
+import { IUsersRepository } from "@application/repositories"
+import { left, right, AppError, ErrorCodes } from "@shared/errors"
 
 @injectable()
 class ValidateUserPasswordUseCase {

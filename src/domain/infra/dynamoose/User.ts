@@ -2,7 +2,7 @@ import * as dynamoose from "dynamoose"
 import { Item } from "dynamoose/dist/Item"
 
 import { IRole } from "@domain/entities/User"
-import { getDynamoTableName } from "@shared/infra/dynamoose/helpers"
+import { getDynamoTableName } from "@shared/infra/dynamoose"
 
 class UserItem extends Item {
   id!: string

@@ -2,18 +2,13 @@ import { inject, injectable } from "tsyringe"
 import { compare } from "bcrypt"
 import { sign } from "jsonwebtoken"
 
-import { JWT_SECRET } from "@config"
-import { JWT_DURATION } from "@config/infra/jwt"
-import { IUsersRepository } from "@application/repositories/IUsersRepository"
-import { ITenantsRepository } from "@application/repositories/ITenantsRepository"
+import { JWT_DURATION, JWT_SECRET } from "@config"
+import { ITenantsRepository, IUsersRepository } from "@application/repositories"
 import {
   IAuthenticateUserDTO,
   IAuthenticateUserResponseDTO,
-} from "@application/modules/authentication/dto/IAuthenticateUserDTO"
-
-import { left, right } from "@shared/errors/Either"
-import { AppError } from "@shared/errors/AppError"
-import { ErrorCodes } from "@shared/errors/ErrorCodes"
+} from "@application/modules/authentication"
+import { left, right, ErrorCodes, AppError } from "@shared/errors"
 
 @injectable()
 class AuthenticateUserUseCase {

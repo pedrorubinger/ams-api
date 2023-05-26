@@ -1,11 +1,12 @@
 import { Router } from "express"
 
-import { CreateTenantController } from "@application/modules/tenant/controllers/CreateTenantController"
-import { isAuthenticated } from "@shared/infra/http/middlewares/isAuthenticated"
-import { isAuthorized } from "@shared/infra/http/middlewares/isAuthorized"
-import { GetAllTenantsController } from "@application/modules/tenant/controllers/GetAllTenantsController"
-import { UpdateTenantController } from "@application/modules/tenant/controllers/UpdateTenantController"
-import { DeleteTenantController } from "@application/modules/tenant/controllers/DeleteTenantController"
+import {
+  CreateTenantController,
+  GetAllTenantsController,
+  UpdateTenantController,
+  DeleteTenantController,
+} from "@application/modules/tenant"
+import { isAuthenticated, isAuthorized } from "@shared/infra/http/middlewares"
 
 const tenantsRoutes = Router()
 

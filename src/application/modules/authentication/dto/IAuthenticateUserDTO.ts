@@ -1,6 +1,5 @@
-import { IRole } from "@domain/entities/User"
-import { AppError } from "@shared/errors/AppError"
-import { Either } from "@shared/errors/Either"
+import { IRole } from "@domain/entities"
+import { AppError, Either } from "@shared/errors"
 
 interface IAuthenticateUserDTO {
   email: string

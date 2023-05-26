@@ -1,6 +1,7 @@
 import * as dynamoose from "dynamoose"
 import { Item } from "dynamoose/dist/Item"
-import { getDynamoTableName } from "@shared/infra/dynamoose/helpers"
+
+import { getDynamoTableName } from "@shared/infra/dynamoose"
 
 class TenantItem extends Item {
   id!: string

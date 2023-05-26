@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { container } from "tsyringe"
 
-import { CreateTenantUseCase } from "@application/modules/tenant/useCases/CreateTenantUseCase"
+import { CreateTenantUseCase } from "@application/modules/tenant"
 import { CreateTenantValidator } from "@domain/infra/joi"
 
 class CreateTenantController {

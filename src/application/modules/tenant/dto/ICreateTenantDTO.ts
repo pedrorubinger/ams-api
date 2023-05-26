@@ -1,6 +1,5 @@
-import { ITenant } from "@domain/entities/Tenant"
-import { AppError } from "@shared/errors/AppError"
-import { Either } from "@shared/errors/Either"
+import { ITenant } from "@domain/entities"
+import { AppError, Either } from "@shared/errors"
 
 interface ICreateTenantDTO {
   id?: string

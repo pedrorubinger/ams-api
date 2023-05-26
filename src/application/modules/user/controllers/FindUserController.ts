@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { container } from "tsyringe"
 
-import { FindUserUseCase } from "@application/modules/user/useCases/FindUserUseCase"
+import { FindUserUseCase } from "@application/modules/user"
 
 class FindUserController {
   async handle(request: Request, response: Response): Promise<Response> {

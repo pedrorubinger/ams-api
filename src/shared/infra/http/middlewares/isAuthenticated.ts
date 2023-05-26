@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express"
 import JWT, { verify } from "jsonwebtoken"
 
-import { ErrorCodes } from "@shared/errors/ErrorCodes"
+import { IRole } from "@domain/entities"
 import { JWT_SECRET } from "@config"
-import { IRole } from "@domain/entities/User"
+import { ErrorCodes } from "@shared/errors"
 
 interface IPayload {
   id: string
