@@ -12,12 +12,14 @@ import { AppError, ErrorCodes, left, right } from "@shared/errors"
 
 export class PartnersRepository implements IPartnersRepository {
   async create({
+    id,
     name,
     registrationId,
     tenantId,
   }: ICreatePartnerDTO): Promise<ICreatePartnerResponseDTO> {
     try {
       const partner = await PartnerModel.create({
+        id,
         name,
         registrationId,
         tenantId,
