@@ -6,7 +6,7 @@ import { UpdatePartnerUseCase } from "@application/modules/partner"
 
 class UpdatePartnerController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { id } = request.user
+    const { id } = request.params
     const { name, registrationId } = request.body
     const validation = UpdatePartnerValidator.validate({
       name,

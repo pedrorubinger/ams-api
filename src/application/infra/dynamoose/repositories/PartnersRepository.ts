@@ -1,6 +1,10 @@
 import {
   ICreatePartnerDTO,
   ICreatePartnerResponseDTO,
+  IDeletePartnerInput,
+  IDeletePartnerResponseDTO,
+  IFindPartnerInput,
+  IFindPartnerResponseDTO,
 } from "@application/modules/partner/dto"
 import {
   IUpdatePartnerDTO,
@@ -50,6 +54,45 @@ export class PartnersRepository implements IPartnersRepository {
       return right({ partner })
     } catch (err) {
       console.log("[ERROR] PartnersRepository > create", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
+    }
+  }
+
+  async find({
+    field,
+    content,
+    tenantId,
+  }: IFindPartnerInput): Promise<IFindPartnerResponseDTO> {
+    try {
+      const response = await PartnerModel.scan({
+        [field]: { contains: content },
+        tenantId: { eq: tenantId },
+      })
+        .all()
+        .exec()
+
+      return right({ partners: response })
+    } catch (err) {
+      console.log("[ERROR] PartnersRepository > find", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
+    }
+  }
+
+  async delete({
+    id,
+    tenantId,
+  }: IDeletePartnerInput): Promise<IDeletePartnerResponseDTO> {
+    try {
+      const partner = await PartnerModel.get(id)
+
+      if (!partner || partner.tenantId !== tenantId) {
+        return left(new AppError(ErrorCodes.TENANT_NOT_FOUND))
+      }
+
+      await PartnerModel.delete({ id })
+      return right({ success: true })
+    } catch (err) {
+      console.log("[ERROR] PartnersRepository > delete", err)
       return left(new AppError(ErrorCodes.INTERNAL))
     }
   }
