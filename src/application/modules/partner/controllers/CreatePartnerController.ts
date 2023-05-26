@@ -6,7 +6,8 @@ import { CreatePartnerUseCase } from "@application/modules/partner"
 
 class CreatePartnerController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { name, registrationId, tenantId } = request.body
+    const { name, registrationId } = request.body
+    const { tenantId } = request.user
     const validation = CreatePartnerValidator.validate({
       name,
       registrationId,
