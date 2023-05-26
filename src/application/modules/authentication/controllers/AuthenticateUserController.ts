@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import { container } from "tsyringe"
 
 import { AuthenticateUserUseCase } from "@application/modules/authentication"
-import { AuthenticateUserValidator } from "@domain/infra/joi/AuthenticateUserValidator"
+import { AuthenticateUserValidator } from "@domain/infra/joi"
 
 class AuthenticateUserController {
   async handle(request: Request, response: Response): Promise<Response> {
