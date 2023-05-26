@@ -19,11 +19,10 @@ export class CreatePartnerUseCase {
     registrationId,
     tenantId,
   }: ICreatePartnerDTO): Promise<ICreatePartnerResponseDTO> {
-    const partner = Partner.create({ name, registrationId })
+    const partner = Partner.create({ name, registrationId, tenantId })
     const payload: ICreatePartnerDTO = {
       ...partner.props,
       id: partner.id,
-      tenantId,
     }
 
     return await this.partnersRepository.create(payload)

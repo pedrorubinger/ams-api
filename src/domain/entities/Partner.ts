@@ -3,6 +3,7 @@ import { Entity, IEntity } from "@core"
 interface IPartnerProps {
   name: string
   registrationId: string
+  tenantId: string
 }
 
 type IPartner = IEntity<IPartnerProps>
