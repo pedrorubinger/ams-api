@@ -1,7 +1,7 @@
 import Joi from "joi"
 
 const AuthenticateUserValidator = Joi.object({
-  name: Joi.string().required().max(80).messages({
+  email: Joi.string().required().max(80).messages({
     "string.base": "EMAIL_MUST_BE_TEXT",
     "any.required": "EMAIL_IS_REQUIRED",
   }),
