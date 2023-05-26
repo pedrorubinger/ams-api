@@ -17,6 +17,7 @@ interface IDonationProps {
   category: DonationCategory
   value: number // in cents
   description?: string
+  tenantId: string
 }
 
 type IDonation = IEntity<IDonationProps>
