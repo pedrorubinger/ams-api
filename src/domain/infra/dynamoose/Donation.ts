@@ -20,7 +20,7 @@ const DonationSchema = new dynamoose.Schema(
   {
     id: { type: String, hashKey: true },
     partnerId: { type: String, required: true },
-    billingDate: { type: Array, required: true },
+    billingDate: { type: Array, schema: [String], required: true },
     category: { type: String, required: true },
     value: { type: Number, required: true },
     description: { type: String, required: false },
