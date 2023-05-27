@@ -10,8 +10,8 @@ import { Donation } from "@domain/entities"
 @injectable()
 export class CreateDonationUseCase {
   constructor(
-    @inject("PartnersRepository")
-    private partnersRepository: IDonationsRepository
+    @inject("DonationsRepository")
+    private donationsRepository: IDonationsRepository
   ) {}
 
   async execute({
@@ -35,6 +35,6 @@ export class CreateDonationUseCase {
       id: partner.id,
     }
 
-    return await this.partnersRepository.create(payload)
+    return await this.donationsRepository.create(payload)
   }
 }
