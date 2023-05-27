@@ -3,7 +3,7 @@ import Joi from "joi"
 
 const CreateDonationValidator = Joi.object({
   partnerId: Joi.string().required().messages({
-    "string.base": "PARTNER_ID_MUST_BE_NUMBER",
+    "string.base": "PARTNER_ID_MUST_BE_TEXT",
     "any.required": "PARTNER_ID_IS_REQUIRED",
   }),
   value: Joi.number().required().messages({
