@@ -3,6 +3,8 @@ import { Item } from "dynamoose/dist/Item"
 
 import { getDynamoTableName } from "@shared/infra/dynamoose"
 
+// type Partner = Omit<PartnerItem, keyof Item>
+
 class PartnerItem extends Item {
   id!: string
   registrationId!: string

@@ -1,6 +1,14 @@
+import {
+  CreateTransactionInput,
+  UpdateTransactionInput,
+} from "dynamoose/dist/Transaction"
+
 import { AppError, Either } from "@shared/errors"
 
-type IUpsertPartnerRegistrationIdOutput = { lastId: string }
+type IUpsertPartnerRegistrationIdOutput = {
+  lastId: string
+  request: UpdateTransactionInput | CreateTransactionInput
+}
 
 interface IUpsertPartnerRegistrationIdDTO {
   lastId?: string

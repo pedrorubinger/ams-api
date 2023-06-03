@@ -24,11 +24,14 @@ export class PartnerRegistrationIdsRepository
     lastId,
   }: IUpdatePartnerRegistrationIdDTO): Promise<IUpdatePartnerRegistrationIdResponseDTO> {
     try {
-      const record = await PartnerRegistrationIdModel.update({ id }, { lastId })
+      const request = await PartnerRegistrationIdModel.transaction.update(
+        { id },
+        { lastId }
+      )
 
-      await record.save()
+      // await request.save()
 
-      return right({ lastId: record.lastId })
+      return right({ request })
     } catch (err) {
       console.log("[ERROR] PartnerRegistrationIdsRepository > update", err)
       return left(new AppError(ErrorCodes.INTERNAL))
@@ -40,14 +43,14 @@ export class PartnerRegistrationIdsRepository
   }: ICreatePartnerRegistrationIdDTO): Promise<ICreatePartnerRegistrationIdResponseDTO> {
     try {
       const registrationId = new PartnerRegistrationId({ lastId })
-      const record = await PartnerRegistrationIdModel.create({
+      const request = await PartnerRegistrationIdModel.transaction.create({
         ...registrationId.props,
         id: registrationId.id,
       })
 
-      await record.save()
+      // await request.save()
 
-      return right({ lastId: record.lastId })
+      return right({ request })
     } catch (err) {
       console.log("[ERROR] PartnerRegistrationIdsRepository > create", err)
       return left(new AppError(ErrorCodes.INTERNAL))
@@ -63,14 +66,24 @@ export class PartnerRegistrationIdsRepository
 
       /* If a registrationId is already registered, increments it */
       if (record?.lastId) {
-        return await this.update({
+        const nextId = lastId || String(Number(record.lastId) + 1)
+        const response = await this.update({
           id: record.id,
-          lastId: lastId || String(Number(record.lastId) + 1),
+          lastId: nextId,
         })
+
+        if (response.isLeft()) return left(response.value)
+
+        return right({ lastId: nextId, request: response.value.request })
       }
 
       /* Once no record is found, creates the first one */
-      return await this.create({ lastId: lastId || "1" })
+      const nextId = lastId || "1"
+      const response = await this.create({ lastId: nextId })
+
+      if (response.isLeft()) return left(response.value)
+
+      return right({ lastId: nextId, request: response.value.request })
     } catch (err) {
       console.log("[ERROR] PartnerRegistrationIdsRepository > upsert", err)
       return left(new AppError(ErrorCodes.INTERNAL))

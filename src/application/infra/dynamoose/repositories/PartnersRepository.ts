@@ -1,5 +1,12 @@
 import { inject, injectable } from "tsyringe"
+import {
+  TransactionReturnOptions,
+  TransactionSettings,
+} from "dynamoose/dist/Transaction"
+import * as dynamoose from "dynamoose"
 
+import { PartnerItem, PartnerModel } from "@domain/infra/dynamoose"
+import { IPartner } from "@domain/entities"
 import {
   ICreatePartnerDTO,
   ICreatePartnerResponseDTO,
@@ -16,8 +23,8 @@ import {
   IPartnerRegistrationIdsRepository,
   IPartnersRepository,
 } from "@application/repositories"
-import { PartnerItem, PartnerModel } from "@domain/infra/dynamoose"
 import { AppError, ErrorCodes, left, right } from "@shared/errors"
+import { TransactionType } from "@config/infra/dynamoose"
 
 @injectable()
 export class PartnersRepository implements IPartnersRepository {
@@ -37,20 +44,32 @@ export class PartnersRepository implements IPartnersRepository {
         lastId: registrationId,
       })
 
-      if (registrationResponse.isLeft()) {
-        return left(registrationResponse.value)
+      if (registrationResponse.isLeft()) return left(registrationResponse.value)
+
+      const item: Omit<IPartner, "createdAt" | "updatedAt"> = {
+        id: id as string,
+        name: name.toUpperCase(),
+        registrationId: String(registrationResponse.value.lastId),
+        tenantId,
+      }
+      const partnerRequest = await PartnerModel.transaction.create(item)
+      const settings: TransactionSettings = {
+        return: TransactionReturnOptions.items,
+        type: "write" as unknown as TransactionType,
       }
 
-      const partner = await PartnerModel.create({
-        id,
-        tenantId,
-        registrationId: String(registrationResponse.value.lastId),
-        name: name.toUpperCase(),
+      await dynamoose.transaction(
+        [registrationResponse.value.request, partnerRequest],
+        settings
+      )
+
+      return right({
+        partner: {
+          ...item,
+          createdAt: Number(partnerRequest.Put.Item?.createdAt?.N as string),
+          updatedAt: Number(partnerRequest.Put.Item?.updatedAt?.N as string),
+        },
       })
-
-      await partner.save()
-
-      return right({ partner })
     } catch (err) {
       console.log("[ERROR] PartnersRepository > create", err)
       return left(new AppError(ErrorCodes.INTERNAL))
