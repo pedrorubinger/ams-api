@@ -1,7 +1,7 @@
-import { PartnerItem } from "@domain/infra/dynamoose"
 import { AppError, Either } from "@shared/errors"
+import { IPartner } from "@domain/entities"
 
-type IUpdatePartnerOutput = PartnerItem
+type IUpdatePartnerOutput = Partial<IPartner>
 
 interface IUpdatePartnerDTO {
   id: string

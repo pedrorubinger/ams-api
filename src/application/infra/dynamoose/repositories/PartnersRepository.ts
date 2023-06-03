@@ -5,6 +5,8 @@ import {
 } from "dynamoose/dist/Transaction"
 import * as dynamoose from "dynamoose"
 
+import { AppError, ErrorCodes, left, right } from "@shared/errors"
+import { TransactionType } from "@config/infra/dynamoose"
 import { PartnerItem, PartnerModel } from "@domain/infra/dynamoose"
 import { IPartner } from "@domain/entities"
 import {
@@ -23,8 +25,6 @@ import {
   IPartnerRegistrationIdsRepository,
   IPartnersRepository,
 } from "@application/repositories"
-import { AppError, ErrorCodes, left, right } from "@shared/errors"
-import { TransactionType } from "@config/infra/dynamoose"
 
 @injectable()
 export class PartnersRepository implements IPartnersRepository {
@@ -32,6 +32,11 @@ export class PartnersRepository implements IPartnersRepository {
     @inject("RegistrationIdsRepository")
     private registrationIdsRepository: IPartnerRegistrationIdsRepository
   ) {}
+
+  private settings: TransactionSettings = {
+    return: TransactionReturnOptions.items,
+    type: "write" as unknown as TransactionType,
+  }
 
   async create({
     id,
@@ -53,14 +58,10 @@ export class PartnersRepository implements IPartnersRepository {
         tenantId,
       }
       const partnerRequest = await PartnerModel.transaction.create(item)
-      const settings: TransactionSettings = {
-        return: TransactionReturnOptions.items,
-        type: "write" as unknown as TransactionType,
-      }
 
       await dynamoose.transaction(
         [registrationResponse.value.request, partnerRequest],
-        settings
+        this.settings
       )
 
       return right({
@@ -85,13 +86,37 @@ export class PartnersRepository implements IPartnersRepository {
       const updatedData: Partial<PartnerItem> = {}
 
       if (name) updatedData.name = name.toUpperCase()
-      if (registrationId) updatedData.registrationId = registrationId
+
+      if (registrationId) {
+        updatedData.registrationId = registrationId
+
+        const registrationResponse =
+          await this.registrationIdsRepository.upsert({
+            lastId: registrationId,
+          })
+
+        if (registrationResponse.isLeft()) {
+          return left(registrationResponse.value)
+        }
+
+        const partnerRequest = await PartnerModel.transaction.update(
+          { id },
+          { ...updatedData }
+        )
+
+        await dynamoose.transaction(
+          [registrationResponse.value.request, partnerRequest],
+          this.settings
+        )
+
+        return right({ partner: updatedData })
+      }
 
       const partner = await PartnerModel.update({ id }, { ...updatedData })
 
       return right({ partner })
     } catch (err) {
-      console.log("[ERROR] PartnersRepository > create", err)
+      console.log("[ERROR] PartnersRepository > update", err)
       return left(new AppError(ErrorCodes.INTERNAL))
     }
   }

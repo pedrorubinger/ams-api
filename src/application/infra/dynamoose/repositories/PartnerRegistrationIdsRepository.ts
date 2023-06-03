@@ -29,8 +29,6 @@ export class PartnerRegistrationIdsRepository
         { lastId }
       )
 
-      // await request.save()
-
       return right({ request })
     } catch (err) {
       console.log("[ERROR] PartnerRegistrationIdsRepository > update", err)
@@ -47,8 +45,6 @@ export class PartnerRegistrationIdsRepository
         ...registrationId.props,
         id: registrationId.id,
       })
-
-      // await request.save()
 
       return right({ request })
     } catch (err) {
