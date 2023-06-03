@@ -8,7 +8,6 @@ const UpdatePartnerValidator = Joi.object({
   }),
   registrationId: Joi.string().optional().messages({
     "string.base": "REGISTRATION_ID_MUST_BE_TEXT",
-    "any.required": "REGISTRATION_ID_IS_REQUIRED",
   }),
 })
 
