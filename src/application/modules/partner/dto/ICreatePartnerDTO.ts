@@ -5,8 +5,8 @@ type ICreatePartnerOutput = PartnerItem
 
 interface ICreatePartnerDTO {
   id?: string
+  registrationId?: string
   name: string
-  registrationId: string
   tenantId: string
 }
 

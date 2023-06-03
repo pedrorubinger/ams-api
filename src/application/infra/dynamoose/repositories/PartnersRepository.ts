@@ -1,3 +1,5 @@
+import { inject, injectable } from "tsyringe"
+
 import {
   ICreatePartnerDTO,
   ICreatePartnerResponseDTO,
@@ -10,11 +12,20 @@ import {
   IUpdatePartnerDTO,
   IUpdatePartnerResponseDTO,
 } from "@application/modules/partner/dto/IUpdatePartnerDTO"
-import { IPartnersRepository } from "@application/repositories"
+import {
+  IPartnerRegistrationIdsRepository,
+  IPartnersRepository,
+} from "@application/repositories"
 import { PartnerItem, PartnerModel } from "@domain/infra/dynamoose"
 import { AppError, ErrorCodes, left, right } from "@shared/errors"
 
+@injectable()
 export class PartnersRepository implements IPartnersRepository {
+  constructor(
+    @inject("RegistrationIdsRepository")
+    private registrationIdsRepository: IPartnerRegistrationIdsRepository
+  ) {}
+
   async create({
     id,
     name,
@@ -22,11 +33,19 @@ export class PartnersRepository implements IPartnersRepository {
     tenantId,
   }: ICreatePartnerDTO): Promise<ICreatePartnerResponseDTO> {
     try {
+      const registrationResponse = await this.registrationIdsRepository.upsert({
+        lastId: registrationId,
+      })
+
+      if (registrationResponse.isLeft()) {
+        return left(registrationResponse.value)
+      }
+
       const partner = await PartnerModel.create({
         id,
-        name: name.toUpperCase(),
-        registrationId,
         tenantId,
+        registrationId: String(registrationResponse.value.lastId),
+        name: name.toUpperCase(),
       })
 
       await partner.save()
