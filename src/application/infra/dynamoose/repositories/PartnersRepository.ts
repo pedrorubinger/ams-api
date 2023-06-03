@@ -24,7 +24,7 @@ export class PartnersRepository implements IPartnersRepository {
     try {
       const partner = await PartnerModel.create({
         id,
-        name,
+        name: name.toUpperCase(),
         registrationId,
         tenantId,
       })
@@ -46,7 +46,7 @@ export class PartnersRepository implements IPartnersRepository {
     try {
       const updatedData: Partial<PartnerItem> = {}
 
-      if (name) updatedData.name = name
+      if (name) updatedData.name = name.toUpperCase()
       if (registrationId) updatedData.registrationId = registrationId
 
       const partner = await PartnerModel.update({ id }, { ...updatedData })
@@ -65,7 +65,7 @@ export class PartnersRepository implements IPartnersRepository {
   }: IFindPartnerInput): Promise<IFindPartnerResponseDTO> {
     try {
       const response = await PartnerModel.scan({
-        [field]: { contains: content },
+        [field]: { contains: content.toUpperCase() },
         tenantId: { eq: tenantId },
       })
         .all()
