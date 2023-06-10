@@ -9,6 +9,9 @@ const UpdatePartnerValidator = Joi.object({
   registrationId: Joi.string().optional().messages({
     "string.base": "REGISTRATION_ID_MUST_BE_TEXT",
   }),
+  autoRegistration: Joi.boolean().optional().messages({
+    "boolean.base": "AUTO_REGISTRATION_MUST_BE_BOOLEAN",
+  }),
 })
 
 export { UpdatePartnerValidator }

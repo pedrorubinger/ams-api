@@ -62,7 +62,10 @@ export class PartnerRegistrationIdsRepository
 
       /* If a registrationId is already registered, increments it */
       if (record?.lastId) {
-        const nextId = lastId || String(Number(record.lastId) + 1)
+        const nextId =
+          lastId && Number(lastId) > Number(record.lastId)
+            ? lastId
+            : String(Number(record.lastId) + 1)
         const response = await this.update({
           id: record.id,
           lastId: nextId,

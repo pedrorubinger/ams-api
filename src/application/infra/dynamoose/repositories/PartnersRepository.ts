@@ -81,6 +81,7 @@ export class PartnersRepository implements IPartnersRepository {
     id,
     name,
     registrationId,
+    autoRegistration = false,
   }: IUpdatePartnerDTO): Promise<IUpdatePartnerResponseDTO> {
     try {
       const updatedData: Partial<PartnerItem> = {}
@@ -88,17 +89,18 @@ export class PartnersRepository implements IPartnersRepository {
       if (name) updatedData.name = name.toUpperCase()
 
       if (registrationId) {
-        updatedData.registrationId = registrationId
+        // updatedData.registrationId = registrationId
 
         const registrationResponse =
           await this.registrationIdsRepository.upsert({
-            lastId: registrationId,
+            lastId: autoRegistration ? undefined : registrationId,
           })
 
         if (registrationResponse.isLeft()) {
           return left(registrationResponse.value)
         }
 
+        updatedData.registrationId = registrationResponse.value.lastId
         const partnerRequest = await PartnerModel.transaction.update(
           { id },
           { ...updatedData }

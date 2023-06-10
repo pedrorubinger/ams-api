@@ -17,7 +17,13 @@ export class UpdatePartnerUseCase {
     id,
     name,
     registrationId,
+    autoRegistration,
   }: IUpdatePartnerDTO): Promise<IUpdatePartnerResponseDTO> {
-    return await this.partnersRepository.update({ id, name, registrationId })
+    return await this.partnersRepository.update({
+      id,
+      name,
+      registrationId,
+      autoRegistration,
+    })
   }
 }
