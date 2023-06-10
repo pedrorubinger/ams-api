@@ -77,6 +77,7 @@ export class PartnersRepository implements IPartnersRepository {
     }
   }
 
+  /* TO DO: Add tenantId validation */
   async update({
     id,
     name,
