@@ -33,7 +33,7 @@ class GetAllDonationsController {
         .json({ code: result.value.message })
     }
 
-    return response.status(201).json(result.value)
+    return response.status(200).json(result.value)
   }
 }
 
