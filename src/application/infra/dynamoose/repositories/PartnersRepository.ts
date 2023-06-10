@@ -89,8 +89,6 @@ export class PartnersRepository implements IPartnersRepository {
       if (name) updatedData.name = name.toUpperCase()
 
       if (registrationId) {
-        // updatedData.registrationId = registrationId
-
         const registrationResponse =
           await this.registrationIdsRepository.upsert({
             lastId: autoRegistration ? undefined : registrationId,
