@@ -1,12 +1,12 @@
-import { PartnerItem } from "@domain/infra/dynamoose"
+import { IPartner } from "@domain/entities"
 import { AppError, Either } from "@shared/errors"
 
-type ICreatePartnerOutput = PartnerItem
+type ICreatePartnerOutput = IPartner
 
 interface ICreatePartnerDTO {
   id?: string
+  registrationId?: string
   name: string
-  registrationId: string
   tenantId: string
 }
 

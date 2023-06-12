@@ -10,9 +10,8 @@ const CreatePartnerValidator = Joi.object({
     "string.base": "TENANT_MUST_BE_TEXT",
     "any.required": "TENANT_IS_REQUIRED",
   }),
-  registrationId: Joi.string().required().messages({
+  registrationId: Joi.string().optional().messages({
     "string.base": "REGISTRATION_ID_MUST_BE_TEXT",
-    "any.required": "REGISTRATION_ID_IS_REQUIRED",
   }),
 })
 
