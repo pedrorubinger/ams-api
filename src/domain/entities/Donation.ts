@@ -13,6 +13,7 @@ enum DonationBillingMonthStatus {
 
 interface IDonationProps {
   partnerId: string
+  incomeDate: Date
   billingDate: string[]
   category: DonationCategory
   value: number // in cents

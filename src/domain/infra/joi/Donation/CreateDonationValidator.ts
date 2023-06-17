@@ -18,6 +18,10 @@ const CreateDonationValidator = Joi.object({
       "any.required": "DONATION_CATEGORY_IS_REQUIRED",
       "any.only": "DONATION_CATEGORY_IS_NOT_ALLOWED",
     }),
+  incomeDate: Joi.date().required().messages({
+    "date.base": "DONATION_INCOME_DATE_MUST_BE_DATE",
+    "any.required": "DONATION_INCOME_DATE_IS_REQUIRED",
+  }),
   billingDate: Joi.array()
     .items(Joi.string().required())
     .min(1)

@@ -10,6 +10,7 @@ interface ICreateDonationDTO {
   id?: string
   partnerId: string
   billingDate: string[]
+  incomeDate: Date
   category: DonationCategory
   value: number // in cents
   description?: string

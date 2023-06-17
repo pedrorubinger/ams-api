@@ -21,9 +21,11 @@ export class CreateDonationUseCase {
     value,
     description,
     tenantId,
+    incomeDate,
   }: ICreateDonationDTO): Promise<ICreateDonationResponseDTO> {
     const partner = Donation.create({
       description,
+      incomeDate,
       billingDate,
       category,
       partnerId,

@@ -12,6 +12,7 @@ export class DonationsRepository implements IDonationsRepository {
   async create({
     id,
     billingDate,
+    incomeDate,
     category,
     partnerId,
     value,
@@ -21,6 +22,7 @@ export class DonationsRepository implements IDonationsRepository {
     try {
       const donation = await DonationModel.create({
         id,
+        incomeDate,
         billingDate,
         category,
         partnerId,
