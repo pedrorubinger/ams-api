@@ -16,6 +16,8 @@ import {
   IDeletePartnerResponseDTO,
   IFindPartnerInput,
   IFindPartnerResponseDTO,
+  IGetAllPartnersInput,
+  IGetAllPartnersResponseDTO,
 } from "@application/modules/partner/dto"
 import {
   IUpdatePartnerDTO,
@@ -138,6 +140,28 @@ export class PartnersRepository implements IPartnersRepository {
       return right({ partners: response })
     } catch (err) {
       console.log("[ERROR] PartnersRepository > find", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
+    }
+  }
+
+  async getAll({
+    tenantId,
+  }: IGetAllPartnersInput): Promise<IGetAllPartnersResponseDTO> {
+    try {
+      const total = await PartnerModel.scan().count().exec()
+      const partners = await PartnerModel.scan()
+        .where("tenantId")
+        .eq(tenantId)
+        .exec()
+
+      return right({
+        partners,
+        count: partners.length,
+        total: total.count,
+        lastKey: null,
+      })
+    } catch (err) {
+      console.log("[ERROR] PartnersRepository > getAll", err)
       return left(new AppError(ErrorCodes.INTERNAL))
     }
   }
