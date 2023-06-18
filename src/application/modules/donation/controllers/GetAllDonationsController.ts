@@ -9,7 +9,6 @@ class GetAllDonationsController {
   async handle(request: Request, response: Response): Promise<Response> {
     const { tenantId } = request.user
     const { category, partnerId } = request.query
-
     const validation = GetAllDonationsValidator.validate({
       category,
       partnerId,
