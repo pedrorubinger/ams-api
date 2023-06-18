@@ -21,8 +21,8 @@ class FindPartnerController {
       return response.status(400).json({ error: validation.error })
     }
 
-    const createPartnerUseCase = container.resolve(FindPartnerUseCase)
-    const result = await createPartnerUseCase.execute({
+    const findPartnerUseCase = container.resolve(FindPartnerUseCase)
+    const result = await findPartnerUseCase.execute({
       field: field as FindPartnerField,
       content: content as string,
       tenantId,
