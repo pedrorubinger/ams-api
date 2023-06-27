@@ -48,6 +48,8 @@ export class DonationsRepository implements IDonationsRepository {
 
       if (params?.partnerId) scan.and().where("partnerId").eq(params.partnerId)
       if (params?.category) scan.and().where("category").eq(params.category)
+      if (params?.size) scan.limit(params.size)
+      if (params?.startAt) scan.startAt({ id: params.startAt })
 
       const total = await DonationModel.scan().count().exec()
       const donations = await scan.exec()
@@ -56,6 +58,9 @@ export class DonationsRepository implements IDonationsRepository {
         donations,
         total: total.count,
         count: donations.length,
+        lastKey: !donations?.count
+          ? null
+          : ((donations?.lastKey?.id ?? null) as string | null),
       })
     } catch (err) {
       console.log("[ERROR] DonationsRepository > getAll", err)

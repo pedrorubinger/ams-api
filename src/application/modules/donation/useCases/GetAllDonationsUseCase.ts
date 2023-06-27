@@ -17,11 +17,15 @@ export class GetAllDonationsUseCase {
     category,
     partnerId,
     tenantId,
+    size,
+    startAt,
   }: IGetAllDonationsDTO): Promise<IGetAllDonationsResponseDTO> {
     return await this.donationsRepository.getAll({
       category,
       partnerId,
       tenantId,
+      size,
+      startAt,
     })
   }
 }
