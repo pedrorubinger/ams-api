@@ -51,7 +51,20 @@ export class DonationsRepository implements IDonationsRepository {
       if (params?.size) scan.limit(params.size)
       if (params?.startAt) scan.startAt({ id: params.startAt })
 
-      const total = await DonationModel.scan().count().exec()
+      const total = params?.partnerId
+        ? await DonationModel.scan()
+            .where("partnerId")
+            .eq(params.partnerId)
+            .and()
+            .where("tenantId")
+            .eq(params.tenantId)
+            .count()
+            .exec()
+        : await DonationModel.scan()
+            .where("tenantId")
+            .eq(params.tenantId)
+            .count()
+            .exec()
       const donations = await scan.exec()
 
       return right({
