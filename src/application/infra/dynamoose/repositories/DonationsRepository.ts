@@ -18,6 +18,7 @@ export class DonationsRepository implements IDonationsRepository {
     value,
     description,
     tenantId,
+    userId,
   }: ICreateDonationDTO): Promise<ICreateDonationResponseDTO> {
     try {
       const donation = await DonationModel.create({
@@ -29,6 +30,7 @@ export class DonationsRepository implements IDonationsRepository {
         value,
         description,
         tenantId,
+        userId,
       })
 
       await donation.save()

@@ -15,6 +15,7 @@ interface ICreateDonationDTO {
   value: number // in cents
   description?: string
   tenantId: string
+  userId: string
 }
 
 type ICreateDonationResponseDTO = Either<AppError, ICreateDonationOutput>

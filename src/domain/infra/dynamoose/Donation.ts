@@ -13,6 +13,7 @@ class DonationItem extends Item {
   value!: number // in cents
   description?: string
   tenantId!: string
+  userId!: string
   createdAt!: number
   updatedAt!: number
 }
@@ -27,6 +28,7 @@ const DonationSchema = new dynamoose.Schema(
     value: { type: Number, required: true },
     description: { type: String, required: false },
     tenantId: { type: String, required: true },
+    userId: { type: String, required: true },
   },
   {
     timestamps: {

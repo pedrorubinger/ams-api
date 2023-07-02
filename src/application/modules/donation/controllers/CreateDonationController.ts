@@ -8,7 +8,7 @@ class CreateDonationController {
   async handle(request: Request, response: Response): Promise<Response> {
     const { billingDate, category, partnerId, value, description, incomeDate } =
       request.body
-    const { tenantId } = request.user
+    const { tenantId, id } = request.user
     const validation = CreateDonationValidator.validate({
       incomeDate,
       billingDate,
@@ -32,6 +32,7 @@ class CreateDonationController {
       value,
       description,
       tenantId,
+      userId: id,
     })
 
     if (result.isLeft()) {
