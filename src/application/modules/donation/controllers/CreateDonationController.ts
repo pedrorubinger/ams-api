@@ -6,10 +6,11 @@ import { CreateDonationUseCase } from "@application/modules/donation"
 
 class CreateDonationController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { billingDate, category, partnerId, value, description } =
+    const { billingDate, category, partnerId, value, description, incomeDate } =
       request.body
-    const { tenantId } = request.user
+    const { tenantId, id } = request.user
     const validation = CreateDonationValidator.validate({
+      incomeDate,
       billingDate,
       category,
       partnerId,
@@ -22,14 +23,16 @@ class CreateDonationController {
       return response.status(400).json({ error: validation.error })
     }
 
-    const createPartnerUseCase = container.resolve(CreateDonationUseCase)
-    const result = await createPartnerUseCase.execute({
+    const createDonationUseCase = container.resolve(CreateDonationUseCase)
+    const result = await createDonationUseCase.execute({
+      incomeDate,
       billingDate,
       category,
       partnerId,
       value,
       description,
       tenantId,
+      userId: id,
     })
 
     if (result.isLeft()) {

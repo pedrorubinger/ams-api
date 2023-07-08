@@ -1,11 +1,9 @@
+import { IPaginatedParams } from "@core/dto"
 import { UserItem } from "@domain/infra/dynamoose"
 import { AppError, Either } from "@shared/errors"
 
-interface IGetAllUsersParamsDTO {
-  /** @default 5 */
-  size?: number
+interface IGetAllUsersParamsDTO extends IPaginatedParams {
   email?: string
-  startAt?: string
 }
 
 type IUserWithTenantName = UserItem & {

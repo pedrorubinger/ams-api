@@ -8,6 +8,7 @@ import {
 import {
   DeletePartnerController,
   FindPartnerController,
+  GetAllPartnersController,
 } from "@application/modules/partner/controllers"
 
 const partnersRoutes = Router()
@@ -15,6 +16,7 @@ const partnersRoutes = Router()
 const createPartnerController = new CreatePartnerController()
 const updatePartnerController = new UpdatePartnerController()
 const findPartnerController = new FindPartnerController()
+const getAllPartnersController = new GetAllPartnersController()
 const deletePartnerController = new DeletePartnerController()
 
 partnersRoutes.post(
@@ -40,6 +42,12 @@ partnersRoutes.delete(
   isAuthenticated,
   isAuthorized({ roles: ["admin"] }),
   deletePartnerController.handle
+)
+partnersRoutes.get(
+  "/all",
+  isAuthenticated,
+  isAuthorized({ roles: ["admin"] }),
+  getAllPartnersController.handle
 )
 
 export { partnersRoutes }

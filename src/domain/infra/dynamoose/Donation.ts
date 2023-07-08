@@ -8,10 +8,12 @@ class DonationItem extends Item {
   id!: string
   partnerId!: string
   billingDate!: string[]
+  incomeDate!: Date
   category!: DonationCategory
   value!: number // in cents
   description?: string
   tenantId!: string
+  userId!: string
   createdAt!: number
   updatedAt!: number
 }
@@ -21,10 +23,12 @@ const DonationSchema = new dynamoose.Schema(
     id: { type: String, hashKey: true },
     partnerId: { type: String, required: true },
     billingDate: { type: Array, schema: [String], required: true },
+    incomeDate: { type: String, required: true },
     category: { type: String, required: true },
     value: { type: Number, required: true },
     description: { type: String, required: false },
     tenantId: { type: String, required: true },
+    userId: { type: String, required: true },
   },
   {
     timestamps: {

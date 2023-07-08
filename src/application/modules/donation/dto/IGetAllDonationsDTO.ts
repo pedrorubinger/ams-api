@@ -2,6 +2,7 @@ import { IPaginatedResult } from "@core"
 import { AppError, Either } from "@shared/errors"
 import { DonationItem } from "@domain/infra/dynamoose"
 import { Donation, DonationCategory } from "@domain/entities"
+import { IPaginatedParams } from "@core/dto"
 
 interface IGetAllDonationsOutput extends IPaginatedResult<Donation> {
   donations: DonationItem[]
@@ -12,7 +13,7 @@ interface IGetAllDonationsFilter {
   category?: DonationCategory
 }
 
-interface IGetAllDonationsDTO extends IGetAllDonationsFilter {
+interface IGetAllDonationsDTO extends IGetAllDonationsFilter, IPaginatedParams {
   tenantId: string
 }
 

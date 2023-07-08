@@ -12,21 +12,25 @@ export class DonationsRepository implements IDonationsRepository {
   async create({
     id,
     billingDate,
+    incomeDate,
     category,
     partnerId,
     value,
     description,
     tenantId,
+    userId,
   }: ICreateDonationDTO): Promise<ICreateDonationResponseDTO> {
     try {
       const donation = await DonationModel.create({
         id,
+        incomeDate,
         billingDate,
         category,
         partnerId,
         value,
         description,
         tenantId,
+        userId,
       })
 
       await donation.save()
@@ -46,14 +50,32 @@ export class DonationsRepository implements IDonationsRepository {
 
       if (params?.partnerId) scan.and().where("partnerId").eq(params.partnerId)
       if (params?.category) scan.and().where("category").eq(params.category)
+      if (params?.size) scan.limit(params.size)
+      if (params?.startAt) scan.startAt({ id: params.startAt })
 
-      const total = await DonationModel.scan().count().exec()
+      const total = params?.partnerId
+        ? await DonationModel.scan()
+            .where("partnerId")
+            .eq(params.partnerId)
+            .and()
+            .where("tenantId")
+            .eq(params.tenantId)
+            .count()
+            .exec()
+        : await DonationModel.scan()
+            .where("tenantId")
+            .eq(params.tenantId)
+            .count()
+            .exec()
       const donations = await scan.exec()
 
       return right({
         donations,
         total: total.count,
         count: donations.length,
+        lastKey: !donations?.count
+          ? null
+          : ((donations?.lastKey?.id ?? null) as string | null),
       })
     } catch (err) {
       console.log("[ERROR] DonationsRepository > getAll", err)

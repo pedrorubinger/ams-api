@@ -10,8 +10,9 @@ const CreatePartnerValidator = Joi.object({
     "string.base": "TENANT_MUST_BE_TEXT",
     "any.required": "TENANT_IS_REQUIRED",
   }),
-  registrationId: Joi.string().optional().messages({
+  registrationId: Joi.string().optional().regex(/^\d+$/).messages({
     "string.base": "REGISTRATION_ID_MUST_BE_TEXT",
+    "string.pattern.base": "REGISTRATION_ID_MUST_BE_NUMERIC",
   }),
 })
 

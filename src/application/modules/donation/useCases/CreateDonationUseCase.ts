@@ -21,9 +21,12 @@ export class CreateDonationUseCase {
     value,
     description,
     tenantId,
+    incomeDate,
+    userId,
   }: ICreateDonationDTO): Promise<ICreateDonationResponseDTO> {
     const partner = Donation.create({
       description,
+      incomeDate,
       billingDate,
       category,
       partnerId,
@@ -33,6 +36,7 @@ export class CreateDonationUseCase {
     const payload: ICreateDonationDTO = {
       ...partner.props,
       id: partner.id,
+      userId,
     }
 
     return await this.donationsRepository.create(payload)

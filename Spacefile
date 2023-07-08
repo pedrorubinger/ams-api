@@ -8,6 +8,7 @@ micros:
       - npm run build
     include:
       - dist
+      - node_modules
     run: "node dist/index.js"
     primary: true
     public_routes: ["/*"]

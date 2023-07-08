@@ -8,12 +8,13 @@ import { DonationCategory } from "@domain/entities"
 class GetAllDonationsController {
   async handle(request: Request, response: Response): Promise<Response> {
     const { tenantId } = request.user
-    const { category, partnerId } = request.query
-
+    const { category, partnerId, size, startAt } = request.query
     const validation = GetAllDonationsValidator.validate({
       category,
       partnerId,
       tenantId,
+      // size,
+      // startAt,
     })
 
     if (validation.error) {
@@ -22,9 +23,11 @@ class GetAllDonationsController {
 
     const getAllDonationsUseCase = container.resolve(GetAllDonationsUseCase)
     const result = await getAllDonationsUseCase.execute({
-      tenantId,
+      size: size ? Number(size) : undefined,
+      startAt: startAt as string | undefined,
       category: category as DonationCategory | undefined,
       partnerId: partnerId as string | undefined,
+      tenantId,
     })
 
     if (result.isLeft()) {

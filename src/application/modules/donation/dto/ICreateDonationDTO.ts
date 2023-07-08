@@ -10,10 +10,12 @@ interface ICreateDonationDTO {
   id?: string
   partnerId: string
   billingDate: string[]
+  incomeDate: Date
   category: DonationCategory
   value: number // in cents
   description?: string
   tenantId: string
+  userId: string
 }
 
 type ICreateDonationResponseDTO = Either<AppError, ICreateDonationOutput>
