@@ -1,8 +1,7 @@
-import { IPaginatedResult } from "@core"
+import { IPaginatedResult, IPaginatedParams } from "@core"
 import { AppError, Either } from "@shared/errors"
 import { DonationItem } from "@domain/infra/dynamoose"
 import { Donation, DonationCategory } from "@domain/entities"
-import { IPaginatedParams } from "@core/dto"
 
 interface IGetAllDonationsOutput extends IPaginatedResult<Donation> {
   donations: DonationItem[]
