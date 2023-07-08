@@ -8,6 +8,7 @@ interface IUpdatePartnerDTO {
   name?: string
   registrationId?: string
   autoRegistration?: boolean
+  tenantId: string
 }
 
 type IUpdatePartnerResponseDTO = Either<
