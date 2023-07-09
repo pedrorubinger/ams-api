@@ -1,6 +1,8 @@
 import {
   ICreateDonationDTO,
   ICreateDonationResponseDTO,
+  IDeleteDonationDTO,
+  IDeleteDonationResponseDTO,
   IGetAllDonationsDTO,
   IGetAllDonationsResponseDTO,
 } from "@application/modules/donation/dto"
@@ -8,6 +10,7 @@ import {
 interface IDonationsRepository {
   create(payload: ICreateDonationDTO): Promise<ICreateDonationResponseDTO>
   getAll(params: IGetAllDonationsDTO): Promise<IGetAllDonationsResponseDTO>
+  delete(params: IDeleteDonationDTO): Promise<IDeleteDonationResponseDTO>
 }
 
 export { IDonationsRepository }

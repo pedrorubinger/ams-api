@@ -1,12 +1,14 @@
+import { AppError, ErrorCodes, left, right } from "@shared/errors"
+import { DonationModel } from "@domain/infra/dynamoose"
 import {
   ICreateDonationDTO,
   ICreateDonationResponseDTO,
+  IDeleteDonationDTO,
+  IDeleteDonationResponseDTO,
   IGetAllDonationsDTO,
   IGetAllDonationsResponseDTO,
 } from "@application/modules/donation/dto"
 import { IDonationsRepository } from "@application/repositories"
-import { DonationModel } from "@domain/infra/dynamoose"
-import { AppError, ErrorCodes, left, right } from "@shared/errors"
 
 export class DonationsRepository implements IDonationsRepository {
   async create({
@@ -79,6 +81,25 @@ export class DonationsRepository implements IDonationsRepository {
       })
     } catch (err) {
       console.log("[ERROR] DonationsRepository > getAll", err)
+      return left(new AppError(ErrorCodes.INTERNAL))
+    }
+  }
+
+  async delete({
+    id,
+    tenantId,
+  }: IDeleteDonationDTO): Promise<IDeleteDonationResponseDTO> {
+    try {
+      const donation = await DonationModel.get(id)
+
+      if (!donation || donation.tenantId !== tenantId) {
+        return left(new AppError(ErrorCodes.DONATION_NOT_FOUND))
+      }
+
+      await DonationModel.delete({ id })
+      return right({ success: true })
+    } catch (err) {
+      console.log("[ERROR] DonationsRepository > delete", err)
       return left(new AppError(ErrorCodes.INTERNAL))
     }
   }
