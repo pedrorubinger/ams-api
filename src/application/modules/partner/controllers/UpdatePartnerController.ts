@@ -7,10 +7,12 @@ import { UpdatePartnerUseCase } from "@application/modules/partner"
 class UpdatePartnerController {
   async handle(request: Request, response: Response): Promise<Response> {
     const { id } = request.params
+    const { tenantId } = request.user
     const { name, registrationId, autoRegistration } = request.body
     const validation = UpdatePartnerValidator.validate({
       name,
       registrationId,
+      tenantId,
     })
 
     if (validation.error) {
@@ -23,6 +25,7 @@ class UpdatePartnerController {
       name,
       registrationId,
       autoRegistration,
+      tenantId,
     })
 
     if (result.isLeft()) {

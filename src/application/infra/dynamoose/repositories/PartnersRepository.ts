@@ -10,6 +10,7 @@ import { TransactionType } from "@config/infra/dynamoose"
 import { PartnerItem, PartnerModel } from "@domain/infra/dynamoose"
 import { IPartner } from "@domain/entities"
 import {
+  FindPartnerField,
   ICreatePartnerDTO,
   ICreatePartnerResponseDTO,
   IDeletePartnerInput,
@@ -53,10 +54,28 @@ export class PartnersRepository implements IPartnersRepository {
 
       if (registrationResponse.isLeft()) return left(registrationResponse.value)
 
+      const lastId = registrationResponse.value.lastId
+
+      const findResponse = await this.find({
+        field: FindPartnerField.ID,
+        content: lastId,
+        tenantId,
+      })
+
+      if (findResponse.isLeft()) {
+        return left(findResponse.value)
+      }
+
+      if (findResponse.value.partners.length) {
+        return left(
+          new AppError(ErrorCodes.REGISTRATION_ID_IS_ALREADY_REGISTERED)
+        )
+      }
+
       const item: Omit<IPartner, "createdAt" | "updatedAt"> = {
         id: id as string,
         name: name.toUpperCase(),
-        registrationId: String(registrationResponse.value.lastId),
+        registrationId: String(lastId),
         tenantId,
       }
       const partnerRequest = await PartnerModel.transaction.create(item)
@@ -84,6 +103,7 @@ export class PartnersRepository implements IPartnersRepository {
     id,
     name,
     registrationId,
+    tenantId,
     autoRegistration = false,
   }: IUpdatePartnerDTO): Promise<IUpdatePartnerResponseDTO> {
     try {
@@ -101,7 +121,24 @@ export class PartnersRepository implements IPartnersRepository {
           return left(registrationResponse.value)
         }
 
+        const findResponse = await this.find({
+          field: FindPartnerField.ID,
+          content: registrationResponse.value.lastId,
+          tenantId,
+        })
+
+        if (findResponse.isLeft()) {
+          return left(findResponse.value)
+        }
+
+        if (findResponse.value.partners.length) {
+          return left(
+            new AppError(ErrorCodes.REGISTRATION_ID_IS_ALREADY_REGISTERED)
+          )
+        }
+
         updatedData.registrationId = registrationResponse.value.lastId
+
         const partnerRequest = await PartnerModel.transaction.update(
           { id },
           { ...updatedData }
@@ -130,12 +167,17 @@ export class PartnersRepository implements IPartnersRepository {
     tenantId,
   }: IFindPartnerInput): Promise<IFindPartnerResponseDTO> {
     try {
-      const response = await PartnerModel.scan({
-        [field]: { contains: content.toUpperCase() },
-        tenantId: { eq: tenantId },
-      })
-        .all()
-        .exec()
+      const isFilteringById = field === FindPartnerField.ID
+      const response = isFilteringById
+        ? await PartnerModel.scan({ [FindPartnerField.ID]: content })
+            .all()
+            .exec()
+        : await PartnerModel.scan({
+            [field]: { contains: content.toUpperCase() },
+            tenantId: { eq: tenantId },
+          })
+            .all()
+            .exec()
 
       return right({ partners: response })
     } catch (err) {
@@ -146,19 +188,25 @@ export class PartnersRepository implements IPartnersRepository {
 
   async getAll({
     tenantId,
+    size,
+    startAt,
   }: IGetAllPartnersInput): Promise<IGetAllPartnersResponseDTO> {
     try {
+      const scan = PartnerModel.scan().where("tenantId").eq(tenantId)
+
+      if (size) scan.limit(size)
+      if (startAt) scan.startAt({ id: startAt })
+
       const total = await PartnerModel.scan().count().exec()
-      const partners = await PartnerModel.scan()
-        .where("tenantId")
-        .eq(tenantId)
-        .exec()
+      const partners = await scan.exec()
 
       return right({
         partners,
         count: partners.length,
         total: total.count,
-        lastKey: null,
+        lastKey: !partners?.count
+          ? null
+          : ((partners?.lastKey?.id ?? null) as string | null),
       })
     } catch (err) {
       console.log("[ERROR] PartnersRepository > getAll", err)

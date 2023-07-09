@@ -1,5 +1,5 @@
 import { AppError, Either } from "@shared/errors"
-import { IPaginatedResult } from "@core"
+import { IPaginatedResult, IPaginatedParams } from "@core"
 import { Partner } from "@domain/entities"
 import { PartnerItem } from "@domain/infra/dynamoose"
 
@@ -9,7 +9,7 @@ interface IGetAllPartnersOutput extends IPaginatedResult<Partner> {
 
 type IGetAllPartnersResponseDTO = Either<AppError, IGetAllPartnersOutput>
 
-interface IGetAllPartnersInput {
+interface IGetAllPartnersInput extends IPaginatedParams {
   tenantId: string
 }
 

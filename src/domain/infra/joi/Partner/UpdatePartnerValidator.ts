@@ -13,6 +13,10 @@ const UpdatePartnerValidator = Joi.object({
   autoRegistration: Joi.boolean().optional().messages({
     "boolean.base": "AUTO_REGISTRATION_MUST_BE_BOOLEAN",
   }),
+  tenantId: Joi.string().required().messages({
+    "string.base": "TENANT_MUST_BE_TEXT",
+    "any.required": "TENANT_IS_REQUIRED",
+  }),
 })
 
 export { UpdatePartnerValidator }

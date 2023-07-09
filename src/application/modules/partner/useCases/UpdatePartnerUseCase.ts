@@ -18,12 +18,14 @@ export class UpdatePartnerUseCase {
     name,
     registrationId,
     autoRegistration,
+    tenantId,
   }: IUpdatePartnerDTO): Promise<IUpdatePartnerResponseDTO> {
     return await this.partnersRepository.update({
       id,
       name,
       registrationId,
       autoRegistration,
+      tenantId,
     })
   }
 }
