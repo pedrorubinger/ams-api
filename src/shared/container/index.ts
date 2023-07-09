@@ -6,6 +6,7 @@ import {
   PartnersRepository as Partners,
   DonationsRepository as Donations,
   PartnerRegistrationIdsRepository as RegistrationIds,
+  MetadataRepository as Metadata,
 } from "@application/infra/dynamoose/repositories"
 import {
   ITenantsRepository as ITenants,
@@ -13,6 +14,7 @@ import {
   IPartnersRepository as IPartners,
   IDonationsRepository as IDonations,
   IPartnerRegistrationIdsRepository as IRegistrationIds,
+  IMetadataRepository as IMetadata,
 } from "@application/repositories"
 
 container.registerSingleton<ITenants>("TenantsRepository", Tenants)
@@ -23,3 +25,4 @@ container.registerSingleton<IRegistrationIds>(
   "RegistrationIdsRepository",
   RegistrationIds
 )
+container.registerSingleton<IMetadata>("MetadataRepository", Metadata)
