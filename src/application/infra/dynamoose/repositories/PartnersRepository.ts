@@ -222,7 +222,7 @@ export class PartnersRepository implements IPartnersRepository {
       const partner = await PartnerModel.get(id)
 
       if (!partner || partner.tenantId !== tenantId) {
-        return left(new AppError(ErrorCodes.TENANT_NOT_FOUND))
+        return left(new AppError(ErrorCodes.PARTNER_NOT_FOUND))
       }
 
       await PartnerModel.delete({ id })
