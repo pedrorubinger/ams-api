@@ -1,13 +1,14 @@
 import { Request, Response } from "express"
 import { container } from "tsyringe"
 
-import { GetAllDonationsUseCase } from "@application/modules/donation"
-import { DonationCategory } from "@domain/entities"
+import { GetDatabaseMetadataUseCase } from "@application/modules/metadata/useCases"
 
 class GetDatabaseMetadataController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const getAllDonationsUseCase = container.resolve(GetAllDonationsUseCase)
-    const result = await getAllDonationsUseCase.execute()
+    const getAllDatabaseMetadataUseCase = container.resolve(
+      GetDatabaseMetadataUseCase
+    )
+    const result = await getAllDatabaseMetadataUseCase.execute()
 
     if (result.isLeft()) {
       return response

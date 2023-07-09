@@ -1,9 +1,9 @@
 import { AppError, Either } from "@shared/errors"
 
 interface IGetAllDonationsOutput {
-  t: any
+  totalSize: number // in mb
 }
 
-type IGetAllDonationsResponseDTO = Either<AppError, IGetAllDonationsOutput>
+type IGetAllDatabaseMetadataResponse = Either<AppError, IGetAllDonationsOutput>
 
-export { IGetAllDonationsResponseDTO, IGetAllDonationsOutput }
+export { IGetAllDatabaseMetadataResponse, IGetAllDonationsOutput }
