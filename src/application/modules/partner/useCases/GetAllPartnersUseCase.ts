@@ -15,7 +15,9 @@ export class GetAllPartnersUseCase {
 
   async execute({
     tenantId,
+    size,
+    startAt,
   }: IGetAllPartnersInput): Promise<IGetAllPartnersResponseDTO> {
-    return await this.partnersRepository.getAll({ tenantId })
+    return await this.partnersRepository.getAll({ tenantId, size, startAt })
   }
 }

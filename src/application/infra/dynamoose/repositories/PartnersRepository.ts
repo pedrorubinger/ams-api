@@ -167,12 +167,17 @@ export class PartnersRepository implements IPartnersRepository {
     tenantId,
   }: IFindPartnerInput): Promise<IFindPartnerResponseDTO> {
     try {
-      const response = await PartnerModel.scan({
-        [field]: { contains: content.toUpperCase() },
-        tenantId: { eq: tenantId },
-      })
-        .all()
-        .exec()
+      const isFilteringById = field === FindPartnerField.ID
+      const response = isFilteringById
+        ? await PartnerModel.scan({ [FindPartnerField.ID]: content })
+            .all()
+            .exec()
+        : await PartnerModel.scan({
+            [field]: { contains: content.toUpperCase() },
+            tenantId: { eq: tenantId },
+          })
+            .all()
+            .exec()
 
       return right({ partners: response })
     } catch (err) {
@@ -183,19 +188,25 @@ export class PartnersRepository implements IPartnersRepository {
 
   async getAll({
     tenantId,
+    size,
+    startAt,
   }: IGetAllPartnersInput): Promise<IGetAllPartnersResponseDTO> {
     try {
+      const scan = PartnerModel.scan().where("tenantId").eq(tenantId)
+
+      if (size) scan.limit(size)
+      if (startAt) scan.startAt({ id: startAt })
+
       const total = await PartnerModel.scan().count().exec()
-      const partners = await PartnerModel.scan()
-        .where("tenantId")
-        .eq(tenantId)
-        .exec()
+      const partners = await scan.exec()
 
       return right({
         partners,
         count: partners.length,
         total: total.count,
-        lastKey: null,
+        lastKey: !partners?.count
+          ? null
+          : ((partners?.lastKey?.id ?? null) as string | null),
       })
     } catch (err) {
       console.log("[ERROR] PartnersRepository > getAll", err)
